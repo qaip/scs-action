@@ -1,0 +1,16 @@
+name: Generate SCs
+author: Artur Sharapov
+description: Generate scs files
+
+inputs:
+  github_token:
+    description: A GitHub token.
+    required: false
+    default: ${{ github.token }}
+  branch:
+    description: A branch name to run action from.
+    required: false
+
+runs:
+  using: node16
+  main: dist/index.js

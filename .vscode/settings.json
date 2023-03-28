@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "https://unpkg.com/graphql-config/config-schema.json": "file:///mnt/dev/development/ostis/study/scs-action/.graphqlrc.yml"
+  }
+}

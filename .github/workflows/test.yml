@@ -1,0 +1,22 @@
+name: Test
+
+# rebuild any PRs and main branch changes
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+
+jobs:
+  # make sure build/ci work properly
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm install
+      - run: npm run all
+
+  # make sure the action works on a clean machine without building
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
