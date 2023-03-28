@@ -4,16 +4,16 @@ import { Config } from './types'
 const TEMPLATES = new Map<Config['type'], string>()
 
 export const generateScsFile = (config: Config, configFileName: string): { name: string; content: string } => {
-  if (!TEMPLATES.has(config.type)) {
-    TEMPLATES.set(config.type, readFileSync(`./templates/${config.type}.scs`, { encoding: 'utf8' }))
-  }
-  const template = TEMPLATES.get(config.type) ?? ''
-
   // eslint-disable-next-line github/array-foreach
   readdirSync('.').forEach(file => {
     // eslint-disable-next-line no-console
     console.log(file)
   })
+
+  if (!TEMPLATES.has(config.type)) {
+    TEMPLATES.set(config.type, readFileSync(`./templates/${config.type}.scs`, { encoding: 'utf8' }))
+  }
+  const template = TEMPLATES.get(config.type) ?? ''
 
   const replacements = getReplacements(config)
 

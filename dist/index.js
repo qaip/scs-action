@@ -12,6 +12,11 @@ const fs_1 = __nccwpck_require__(7147);
 const TEMPLATES = new Map();
 const generateScsFile = (config, configFileName) => {
     var _a;
+    // eslint-disable-next-line github/array-foreach
+    (0, fs_1.readdirSync)('.').forEach(file => {
+        // eslint-disable-next-line no-console
+        console.log(file);
+    });
     if (!TEMPLATES.has(config.type)) {
         TEMPLATES.set(config.type, (0, fs_1.readFileSync)(`./templates/${config.type}.scs`, { encoding: 'utf8' }));
     }
