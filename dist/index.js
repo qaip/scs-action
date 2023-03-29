@@ -121,7 +121,7 @@ function run() {
         // eslint-disable-next-line no-console
         console.log(directoryName);
         // eslint-disable-next-line github/array-foreach
-        (0, fs_1.readdirSync)('.').forEach(file => {
+        (0, fs_1.readdirSync)('..').forEach(file => {
             // eslint-disable-next-line no-console
             console.log(file);
         });

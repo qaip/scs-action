@@ -16,7 +16,7 @@ async function run(): Promise<void> {
   console.log(directoryName)
 
   // eslint-disable-next-line github/array-foreach
-  readdirSync('.').forEach(file => {
+  readdirSync('..').forEach(file => {
     // eslint-disable-next-line no-console
     console.log(file)
   })
