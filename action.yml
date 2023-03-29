@@ -10,6 +10,10 @@ inputs:
   branch:
     description: A branch name to run action from.
     required: false
+  ignore_empty:
+    description: Ignore empty files [never|always].
+    required: false
+    default: never
 
 runs:
   using: node16
