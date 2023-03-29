@@ -63,4 +63,4 @@ const list =
           .filter(Boolean)
           .map(value => indent + prefix + value)
           .join(';\n')
-      : '...'
+      : `${indent}...`
