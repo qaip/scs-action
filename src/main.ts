@@ -11,11 +11,13 @@ async function run(): Promise<void> {
   const octokit = github.getOctokit(githubToken)
   const payload = github.context.payload as PullRequestEvent
 
+  // Get the names of changed .sc.yaml files and the oid of the last commit
   const { fileNames, commitOid } = await getPullRequestData(octokit, {
     ...github.context.repo,
     pullRequestNumber: payload.pull_request.number
   })
 
+  // Exit if no files are changed
   if (!fileNames.length) {
     core.info(`No changes detected`)
     return
@@ -23,13 +25,20 @@ async function run(): Promise<void> {
 
   core.info(`Detected new changes in files: { ${fileNames.join(',')} }`)
 
-  const fileContents = await getFilesContent(octokit, github.context.repo, {
+  // Get the content of changed files
+  let filesContent = await getFilesContent(octokit, github.context.repo, {
     fileNames,
     branch: payload.pull_request.head.ref
   })
 
-  // Generate files
-  const files = fileContents.map((content, index) => generateScsFile(parse(content), fileNames[index]))
+  // Exclude empty files if ignore_empty input is set
+  const ignoreEmpty = core.getInput('ignore_empty')
+  if (ignoreEmpty === 'always') {
+    filesContent = filesContent.filter(content => content.trim())
+  }
+
+  // Generate scs files
+  const files = filesContent.map((content, index) => generateScsFile(parse(content), fileNames[index]))
 
   // Commit and push generated scs files
   const commitUrl = await commitFiles(
