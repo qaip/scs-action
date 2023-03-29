@@ -2,25 +2,11 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 // eslint-disable-next-line import/no-unresolved
 import { PullRequestEvent } from '@octokit/webhooks-definitions/schema'
-import { readdirSync } from 'fs'
-import { basename } from 'path'
 import { generateScsFile } from './generate'
 import { commitFiles, getFilesContent, getPullRequestData } from './requests/'
 import { parse } from './validate'
 
 async function run(): Promise<void> {
-  const directoryName = basename(__dirname)
-  // eslint-disable-next-line no-console
-  console.log(__dirname)
-  // eslint-disable-next-line no-console
-  console.log(directoryName)
-
-  // eslint-disable-next-line github/array-foreach
-  readdirSync('..').forEach(file => {
-    // eslint-disable-next-line no-console
-    console.log(file)
-  })
-
   const githubToken = core.getInput('github_token')
   const octokit = github.getOctokit(githubToken)
   const payload = github.context.payload as PullRequestEvent

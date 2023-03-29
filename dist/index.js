@@ -108,23 +108,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const fs_1 = __nccwpck_require__(7147);
-const path_1 = __nccwpck_require__(1017);
 const generate_1 = __nccwpck_require__(2092);
 const requests_1 = __nccwpck_require__(2386);
 const validate_1 = __nccwpck_require__(1997);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const directoryName = (0, path_1.basename)(__dirname);
-        // eslint-disable-next-line no-console
-        console.log(__dirname);
-        // eslint-disable-next-line no-console
-        console.log(directoryName);
-        // eslint-disable-next-line github/array-foreach
-        (0, fs_1.readdirSync)('..').forEach(file => {
-            // eslint-disable-next-line no-console
-            console.log(file);
-        });
         const githubToken = core.getInput('github_token');
         const octokit = github.getOctokit(githubToken);
         const payload = github.context.payload;
