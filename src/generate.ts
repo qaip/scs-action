@@ -1,11 +1,12 @@
 import { readFileSync } from 'fs'
+import { join } from 'path'
 import { Config } from './types'
 
 const TEMPLATES = new Map<Config['type'], string>()
 
 export const generateScsFile = (config: Config, configFileName: string): { name: string; content: string } => {
   if (!TEMPLATES.has(config.type)) {
-    TEMPLATES.set(config.type, readFileSync(`./templates/${config.type}.scs`, { encoding: 'utf8' }))
+    TEMPLATES.set(config.type, readFileSync(join(__dirname, `templates/${config.type}.scs`), { encoding: 'utf8' }))
   }
   const template = TEMPLATES.get(config.type) ?? ''
 

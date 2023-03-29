@@ -9,11 +9,12 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.generateScsFile = void 0;
 const fs_1 = __nccwpck_require__(7147);
+const path_1 = __nccwpck_require__(1017);
 const TEMPLATES = new Map();
 const generateScsFile = (config, configFileName) => {
     var _a;
     if (!TEMPLATES.has(config.type)) {
-        TEMPLATES.set(config.type, (0, fs_1.readFileSync)(`./templates/${config.type}.scs`, { encoding: 'utf8' }));
+        TEMPLATES.set(config.type, (0, fs_1.readFileSync)((0, path_1.join)(__dirname, `templates/${config.type}.scs`), { encoding: 'utf8' }));
     }
     const template = (_a = TEMPLATES.get(config.type)) !== null && _a !== void 0 ? _a : '';
     const replacements = getReplacements(config);

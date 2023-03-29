@@ -1,6 +1,6 @@
-name: Generate SCs
+name: SCs Automation
 author: Artur Sharapov
-description: Generate scs files
+description: Generate and update scs files
 
 inputs:
   github_token:

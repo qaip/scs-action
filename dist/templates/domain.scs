@@ -1,0 +1,54 @@
+section_subject_domain_of_#SYSTEM#
+
+<- #ATOMIC#_section;
+
+=> nrel_main_idtf:
+	[Раздел. Предметная область #RU#] (* <- lang_ru;; *);
+	[Section. Subject Domain of #EN#] (* <- lang_en;; *);
+
+<= nrel_section_decomposition: {
+	#SECTION_CHILDREN#
+};
+
+<- rrel_key_sc_element:
+	subject_domain_of_#SYSTEM#;
+	#MAX#;
+	#CONCEPTS#;
+	#RRELS#;
+	#NRELS#;;
+
+section_subject_domain_of_#SYSTEM#=[*
+	subject_domain_of_#SYSTEM#
+	<- sc_node_struct;
+	<- subject_domain;
+	=> nrel_main_idtf:
+		[Предметная область #RU#] (* <- lang_ru;; *);
+		[Subject Domain of #EN#] (* <- lang_en;; *);
+
+	-> rrel_maximum_studied_object_class:
+		#MAX#;
+
+	-> rrel_not_maximum_studied_object_class:
+		#CONCEPTS#;
+
+	-> rrel_explored_relation:
+		#RRELS#;
+		#NRELS#;
+
+	<= nrel_private_subject_domain:
+		subject_domain_of_#PARENT#;
+
+	=> nrel_private_subject_domain:
+		#CHILDREN#;;
+*];;
+
+
+sc_node_class ->
+	#MAX#;
+	#CONCEPTS#;;
+
+sc_node_role_relation ->
+	#RRELS#;;
+
+sc_node_norole_relation ->
+	#NRELS#;;
