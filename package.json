@@ -6,13 +6,14 @@
   "license": "MIT",
   "description": "Automate custom and preset scs files creation with GitHub Actions",
   "main": "lib/main.js",
-  "assets": ["tempaltes", "path/to/other.js"],
+  "assets": ["tempaltes"],
   "scripts": {
     "build": "tsc",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
     "pack": "ncc build --source-map --license licenses.txt",
+    "postpack": "rm -r ./dist/templates && cp -r ./templates ./dist/templates",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
   },
