@@ -13783,7 +13783,7 @@ const list = (prefix, values) => (indent) => values
         .filter(Boolean)
         .map(value => indent + prefix + value)
         .join(';\n')
-    : '...';
+    : `${indent}...`;
 
 
 /***/ }),
