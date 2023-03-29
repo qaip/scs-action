@@ -1,345 +1,5 @@
-require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
-
-/***/ 2092:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.generateScsFile = void 0;
-const fs_1 = __nccwpck_require__(7147);
-const path_1 = __nccwpck_require__(1017);
-const TEMPLATES = new Map();
-const generateScsFile = (config, configFileName) => {
-    var _a;
-    if (!TEMPLATES.has(config.type)) {
-        TEMPLATES.set(config.type, (0, fs_1.readFileSync)((0, path_1.join)(__dirname, `templates/${config.type}.scs`), { encoding: 'utf8' }));
-    }
-    const template = (_a = TEMPLATES.get(config.type)) !== null && _a !== void 0 ? _a : '';
-    const replacements = getReplacements(config);
-    const replacer = (match, indent, variable) => {
-        var _a;
-        const replacement = (_a = replacements[variable]) !== null && _a !== void 0 ? _a : match;
-        return typeof replacement === 'string' ? replacement : replacement(indent);
-    };
-    const scs = template.replace(/(\t*)(#[^#]+#)/g, replacer);
-    return {
-        name: getScsFileName(config, configFileName),
-        content: Buffer.from(scs, 'utf-8').toString('base64')
-    };
-};
-exports.generateScsFile = generateScsFile;
-const getScsFileName = (config, configFileName) => {
-    var _a, _b;
-    const path = (_b = (_a = configFileName.match(/^(.+\/).+$/)) === null || _a === void 0 ? void 0 : _a.at(1)) !== null && _b !== void 0 ? _b : '';
-    switch (config.type) {
-        case 'domain': {
-            return `${path}domain_${config.system}.scs`;
-        }
-    }
-};
-const getReplacements = (config) => {
-    switch (config.type) {
-        case 'domain': {
-            return {
-                '#SYSTEM#': config.system,
-                '#RU#': config.ru,
-                '#EN#': config.en,
-                '#PARENT#': config.parent,
-                '#CHILDREN#': list('subject_domain_of_', config.children),
-                '#SECTION_CHILDREN#': list('section_subject_domain_of_', config.children),
-                '#MAX#': list('concept_', config.max),
-                '#CONCEPTS#': list('concept_', config.concepts),
-                '#RRELS#': list('rrel_', config.rrels),
-                '#NRELS#': list('nrel_', config.nrels),
-                '#ATOMIC#': config.children ? 'non_atomic' : 'atomic'
-            };
-        }
-    }
-};
-const list = (prefix, values) => (indent) => values
-    ? values
-        .split('\n')
-        .filter(Boolean)
-        .map(value => indent + prefix + value)
-        .join(';\n')
-    : '...';
-
-
-/***/ }),
-
-/***/ 3109:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(2186));
-const github = __importStar(__nccwpck_require__(5438));
-const generate_1 = __nccwpck_require__(2092);
-const requests_1 = __nccwpck_require__(2386);
-const validate_1 = __nccwpck_require__(1997);
-function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const githubToken = core.getInput('github_token');
-        const octokit = github.getOctokit(githubToken);
-        const payload = github.context.payload;
-        // Get the names of changed .sc.yaml files and the oid of the last commit
-        const { fileNames, commitOid } = yield (0, requests_1.getPullRequestData)(octokit, Object.assign(Object.assign({}, github.context.repo), { pullRequestNumber: payload.pull_request.number }));
-        // Exit if no files are changed
-        if (!fileNames.length) {
-            core.info(`No changes detected`);
-            return;
-        }
-        core.info(`Detected new changes in files: { ${fileNames.join(',')} }`);
-        // Get the content of changed files
-        let filesContent = yield (0, requests_1.getFilesContent)(octokit, github.context.repo, {
-            fileNames,
-            branch: payload.pull_request.head.ref
-        });
-        // Exclude empty files if ignore_empty input is set
-        const ignoreEmpty = core.getInput('ignore_empty');
-        if (ignoreEmpty === 'always') {
-            filesContent = filesContent.filter(content => content.trim());
-        }
-        // Generate scs files
-        const files = filesContent.map((content, index) => (0, generate_1.generateScsFile)((0, validate_1.parse)(content), fileNames[index]));
-        // Commit and push generated scs files
-        const commitUrl = yield (0, requests_1.commitFiles)(octokit, {
-            repo: payload.repository.full_name,
-            branch: payload.pull_request.head.ref,
-            oid: commitOid
-        }, { files });
-        core.info(`Successfully made a commit: ${commitUrl}`);
-    });
-}
-try {
-    run();
-}
-catch (error) {
-    core.setFailed(error.message);
-}
-
-
-/***/ }),
-
-/***/ 7683:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.commitFiles = void 0;
-const commitFiles = (octokit, variables, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    return (yield octokit.graphql(
-    /* GraphQL-Factory */ `
-        mutation ($repo: String!, $branch: String!, $oid: GitObjectID!) {
-          createCommitOnBranch(
-            input: {
-              branch: { repositoryNameWithOwner: $repo, branchName: $branch }
-              message: { headline: "Update scs files" }
-              fileChanges: {
-                additions: [
-                  ${payload.files.map(file => `{ path: "${file.name}", contents: "${file.content}" }`)}
-                ]
-              }
-              expectedHeadOid: $oid
-            }
-          ) {
-            commit {
-              commitUrl
-            }
-          }
-        }
-      `, variables)).createCommitOnBranch.commit.commitUrl;
-});
-exports.commitFiles = commitFiles;
-
-
-/***/ }),
-
-/***/ 4144:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getFilesContent = void 0;
-const getFilesContent = (octokit, variables, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    return payload.fileNames.length
-        ? Object.values((yield octokit.graphql(
-        /* GraphQL-Factory */ `
-          query ($owner: String!, $repo: String!) {
-            repository(owner: $owner, name: $repo) {
-              ${payload.fileNames.map((fileName, index) => `
-                  file${index}: object(expression: "${payload.branch}:${fileName}") {
-                    ... on Blob {
-                      text
-                    }
-                  }
-                `)}
-            }
-          }
-        `, variables)).repository).map(node => { var _a; return (_a = node === null || node === void 0 ? void 0 : node.text) !== null && _a !== void 0 ? _a : ''; })
-        : [];
-});
-exports.getFilesContent = getFilesContent;
-
-
-/***/ }),
-
-/***/ 2386:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestData = exports.getFilesContent = exports.commitFiles = void 0;
-var commit_files_1 = __nccwpck_require__(7683);
-Object.defineProperty(exports, "commitFiles", ({ enumerable: true, get: function () { return commit_files_1.commitFiles; } }));
-var files_content_1 = __nccwpck_require__(4144);
-Object.defineProperty(exports, "getFilesContent", ({ enumerable: true, get: function () { return files_content_1.getFilesContent; } }));
-var pull_request_data_1 = __nccwpck_require__(650);
-Object.defineProperty(exports, "getPullRequestData", ({ enumerable: true, get: function () { return pull_request_data_1.getPullRequestData; } }));
-
-
-/***/ }),
-
-/***/ 650:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestData = void 0;
-const getPullRequestData = (octokit, variables) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const query = /* GraphQL */ `
-    query ($owner: String!, $repo: String!, $pullRequestNumber: Int!) {
-      repository(owner: $owner, name: $repo) {
-        pullRequest(number: $pullRequestNumber) {
-          files(first: 100) {
-            nodes {
-              path
-            }
-          }
-          headRef {
-            target {
-              ... on Commit {
-                history(first: 1) {
-                  nodes {
-                    oid
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  `;
-    const { repository } = yield octokit.graphql(query, variables);
-    const fileNames = repository.pullRequest.files.nodes
-        .map(node => node.path)
-        .filter(path => /^.+\.sc\.ya?ml$/.test(path));
-    const commitOid = (_a = repository.pullRequest.headRef.target.history.nodes.at(0)) === null || _a === void 0 ? void 0 : _a.oid;
-    if (!commitOid) {
-        throw new Error('Commit Oid is not found');
-    }
-    return { fileNames, commitOid };
-});
-exports.getPullRequestData = getPullRequestData;
-
-
-/***/ }),
-
-/***/ 1997:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isConfig = exports.parse = void 0;
-const js_yaml_1 = __nccwpck_require__(1917);
-const parse = (text) => {
-    const config = (0, js_yaml_1.load)(text);
-    if (isConfig(config)) {
-        return config;
-    }
-    throw new Error('Config is not valid. why?');
-};
-exports.parse = parse;
-// Validate here (add a package that uses reflex-metadata to validate object based on type defintions)
-function isConfig(config) {
-    if (typeof config !== 'object') {
-        throw new Error('config is not valid');
-    }
-    return true;
-}
-exports.isConfig = isConfig;
-
-
-/***/ }),
 
 /***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
@@ -14060,6 +13720,346 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 1324:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.generateScsFile = void 0;
+const fs_1 = __nccwpck_require__(7147);
+const path_1 = __nccwpck_require__(1017);
+const TEMPLATES = new Map();
+const generateScsFile = (config, configFileName) => {
+    var _a;
+    if (!TEMPLATES.has(config.type)) {
+        TEMPLATES.set(config.type, (0, fs_1.readFileSync)((0, path_1.join)(__dirname, `templates/${config.type}.scs`), { encoding: 'utf8' }));
+    }
+    const template = (_a = TEMPLATES.get(config.type)) !== null && _a !== void 0 ? _a : '';
+    const replacements = getReplacements(config);
+    const replacer = (match, indent, variable) => {
+        var _a;
+        const replacement = (_a = replacements[variable]) !== null && _a !== void 0 ? _a : match;
+        return typeof replacement === 'string' ? replacement : replacement(indent);
+    };
+    const scs = template.replace(/(\t*)(#[^#]+#)/g, replacer);
+    return {
+        name: getScsFileName(config, configFileName),
+        content: Buffer.from(scs, 'utf-8').toString('base64')
+    };
+};
+exports.generateScsFile = generateScsFile;
+const getScsFileName = (config, configFileName) => {
+    var _a, _b;
+    const path = (_b = (_a = configFileName.match(/^(.+\/).+$/)) === null || _a === void 0 ? void 0 : _a.at(1)) !== null && _b !== void 0 ? _b : '';
+    switch (config.type) {
+        case 'domain': {
+            return `${path}domain_${config.system}.scs`;
+        }
+    }
+};
+const getReplacements = (config) => {
+    switch (config.type) {
+        case 'domain': {
+            return {
+                '#SYSTEM#': config.system,
+                '#RU#': config.ru,
+                '#EN#': config.en,
+                '#PARENT#': config.parent,
+                '#CHILDREN#': list('subject_domain_of_', config.children),
+                '#SECTION_CHILDREN#': list('section_subject_domain_of_', config.children),
+                '#MAX#': list('concept_', config.max),
+                '#CONCEPTS#': list('concept_', config.concepts),
+                '#RRELS#': list('rrel_', config.rrels),
+                '#NRELS#': list('nrel_', config.nrels),
+                '#ATOMIC#': config.children ? 'non_atomic' : 'atomic'
+            };
+        }
+    }
+};
+const list = (prefix, values) => (indent) => values
+    ? values
+        .split('\n')
+        .filter(Boolean)
+        .map(value => indent + prefix + value)
+        .join(';\n')
+    : '...';
+
+
+/***/ }),
+
+/***/ 399:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(2186));
+const github = __importStar(__nccwpck_require__(5438));
+const generate_1 = __nccwpck_require__(1324);
+const requests_1 = __nccwpck_require__(8899);
+const validate_1 = __nccwpck_require__(4953);
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const githubToken = core.getInput('github_token');
+        const octokit = github.getOctokit(githubToken);
+        const payload = github.context.payload;
+        // Get the names of changed .sc.yaml files and the oid of the last commit
+        const { fileNames, commitOid } = yield (0, requests_1.getPullRequestData)(octokit, Object.assign(Object.assign({}, github.context.repo), { pullRequestNumber: payload.pull_request.number }));
+        // Exit if no files are changed
+        if (!fileNames.length) {
+            core.info(`No changes detected`);
+            return;
+        }
+        core.info(`Detected new changes in files: { ${fileNames.join(',')} }`);
+        // Get the content of changed files
+        let filesContent = yield (0, requests_1.getFilesContent)(octokit, github.context.repo, {
+            fileNames,
+            branch: payload.pull_request.head.ref
+        });
+        // Exclude empty files if ignore_empty input is set
+        const ignoreEmpty = core.getInput('ignore_empty');
+        if (ignoreEmpty === 'always') {
+            filesContent = filesContent.filter(content => content.trim());
+        }
+        // Generate scs files
+        const files = filesContent.map((content, index) => (0, generate_1.generateScsFile)((0, validate_1.parse)(content), fileNames[index]));
+        // Commit and push generated scs files
+        const commitUrl = yield (0, requests_1.commitFiles)(octokit, {
+            repo: payload.repository.full_name,
+            branch: payload.pull_request.head.ref,
+            oid: commitOid
+        }, { files });
+        core.info(`Successfully made a commit: ${commitUrl}`);
+    });
+}
+try {
+    run();
+}
+catch (error) {
+    core.setFailed(error.message);
+}
+
+
+/***/ }),
+
+/***/ 2004:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.commitFiles = void 0;
+const commitFiles = (octokit, variables, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    return (yield octokit.graphql(
+    /* GraphQL-Factory */ `
+        mutation ($repo: String!, $branch: String!, $oid: GitObjectID!) {
+          createCommitOnBranch(
+            input: {
+              branch: { repositoryNameWithOwner: $repo, branchName: $branch }
+              message: { headline: "Update scs files" }
+              fileChanges: {
+                additions: [
+                  ${payload.files.map(file => `{ path: "${file.name}", contents: "${file.content}" }`)}
+                ]
+              }
+              expectedHeadOid: $oid
+            }
+          ) {
+            commit {
+              commitUrl
+            }
+          }
+        }
+      `, variables)).createCommitOnBranch.commit.commitUrl;
+});
+exports.commitFiles = commitFiles;
+
+
+/***/ }),
+
+/***/ 6316:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getFilesContent = void 0;
+const getFilesContent = (octokit, variables, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    return payload.fileNames.length
+        ? Object.values((yield octokit.graphql(
+        /* GraphQL-Factory */ `
+          query ($owner: String!, $repo: String!) {
+            repository(owner: $owner, name: $repo) {
+              ${payload.fileNames.map((fileName, index) => `
+                  file${index}: object(expression: "${payload.branch}:${fileName}") {
+                    ... on Blob {
+                      text
+                    }
+                  }
+                `)}
+            }
+          }
+        `, variables)).repository).map(node => { var _a; return (_a = node === null || node === void 0 ? void 0 : node.text) !== null && _a !== void 0 ? _a : ''; })
+        : [];
+});
+exports.getFilesContent = getFilesContent;
+
+
+/***/ }),
+
+/***/ 8899:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getPullRequestData = exports.getFilesContent = exports.commitFiles = void 0;
+var commit_files_1 = __nccwpck_require__(2004);
+Object.defineProperty(exports, "commitFiles", ({ enumerable: true, get: function () { return commit_files_1.commitFiles; } }));
+var files_content_1 = __nccwpck_require__(6316);
+Object.defineProperty(exports, "getFilesContent", ({ enumerable: true, get: function () { return files_content_1.getFilesContent; } }));
+var pull_request_data_1 = __nccwpck_require__(1992);
+Object.defineProperty(exports, "getPullRequestData", ({ enumerable: true, get: function () { return pull_request_data_1.getPullRequestData; } }));
+
+
+/***/ }),
+
+/***/ 1992:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getPullRequestData = void 0;
+const getPullRequestData = (octokit, variables) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const query = /* GraphQL */ `
+    query ($owner: String!, $repo: String!, $pullRequestNumber: Int!) {
+      repository(owner: $owner, name: $repo) {
+        pullRequest(number: $pullRequestNumber) {
+          files(first: 100) {
+            nodes {
+              path
+            }
+          }
+          headRef {
+            target {
+              ... on Commit {
+                history(first: 1) {
+                  nodes {
+                    oid
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+    const { repository } = yield octokit.graphql(query, variables);
+    const fileNames = repository.pullRequest.files.nodes
+        .map(node => node.path)
+        .filter(path => /^.+\.sc\.ya?ml$/.test(path));
+    const commitOid = (_a = repository.pullRequest.headRef.target.history.nodes.at(0)) === null || _a === void 0 ? void 0 : _a.oid;
+    if (!commitOid) {
+        throw new Error('Commit Oid is not found');
+    }
+    return { fileNames, commitOid };
+});
+exports.getPullRequestData = getPullRequestData;
+
+
+/***/ }),
+
+/***/ 4953:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isConfig = exports.parse = void 0;
+const js_yaml_1 = __nccwpck_require__(1917);
+const parse = (text) => {
+    const config = (0, js_yaml_1.load)(text);
+    if (isConfig(config)) {
+        return config;
+    }
+    throw new Error('Config is not valid. why?');
+};
+exports.parse = parse;
+// Validate here (add a package that uses reflex-metadata to validate object based on type defintions)
+function isConfig(config) {
+    if (typeof config !== 'object') {
+        throw new Error('config is not valid');
+    }
+    return true;
+}
+exports.isConfig = isConfig;
+
+
+/***/ }),
+
 /***/ 2877:
 /***/ ((module) => {
 
@@ -14238,9 +14238,8 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(3109);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(399);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map

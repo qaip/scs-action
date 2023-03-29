@@ -1,4 +1,2 @@
-node_modules/
-lib/**/*
-tests/runner/*
+/node_modules/
 schema.docs.graphql
