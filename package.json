@@ -1,16 +1,18 @@
 {
   "name": "scs-action",
-  "version": "0.1.0",
-  "private": true,
-  "description": "Automate scs files creation using GitHub Actions",
+  "version": "1.0.6",
+  "private": false,
+  "author": "Artur Sharapov",
+  "license": "MIT",
+  "description": "Automate custom and preset scs files creation with GitHub Actions",
   "main": "lib/main.js",
+  "assets": ["tempaltes", "path/to/other.js"],
   "scripts": {
     "build": "tsc",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
     "pack": "ncc build --source-map --license licenses.txt",
-    "postpack": "rm -r ./dist/templates && cp -r ./templates ./dist/templates",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
   },
@@ -23,8 +25,6 @@
     "node",
     "setup"
   ],
-  "author": "Artur Sharapov",
-  "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
