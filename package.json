@@ -1,6 +1,6 @@
 {
   "name": "scs-action",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "private": false,
   "author": "Artur Sharapov",
   "license": "MIT",
@@ -12,10 +12,10 @@
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "pack": "ncc build --source-map --license licenses.txt",
-    "postpack": "rm -r ./dist/templates && cp -r ./templates ./dist/templates",
+    "package": "ncc build --source-map --license licenses.txt && npm run copy-assets",
+    "copy-assets": "rm -r ./dist/templates; cp -r ./templates ./dist/templates",
     "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
+    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
   },
   "repository": {
     "type": "git",
