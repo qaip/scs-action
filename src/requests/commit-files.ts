@@ -1,5 +1,4 @@
-import { GitHub } from '@actions/github/lib/utils'
-type Octokit = InstanceType<typeof GitHub>
+import { Octokit } from '.'
 
 export const commitFiles = async (
   octokit: Octokit,
