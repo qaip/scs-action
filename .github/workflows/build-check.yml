@@ -1,4 +1,4 @@
-name: Check dist
+name: Build check
 
 on:
   pull_request:

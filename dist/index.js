@@ -13726,9 +13726,10 @@ function wrappy (fn, cb) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.generateScsFile = void 0;
+exports.list = exports.generateScsFile = void 0;
 const fs_1 = __nccwpck_require__(7147);
 const path_1 = __nccwpck_require__(1017);
+const replacements_1 = __nccwpck_require__(9710);
 const TEMPLATES = new Map();
 const generateScsFile = (config, configFileName) => {
     var _a;
@@ -13736,7 +13737,7 @@ const generateScsFile = (config, configFileName) => {
         TEMPLATES.set(config.type, (0, fs_1.readFileSync)((0, path_1.join)(__dirname, `templates/${config.type}.scs`), { encoding: 'utf8' }));
     }
     const template = (_a = TEMPLATES.get(config.type)) !== null && _a !== void 0 ? _a : '';
-    const replacements = getReplacements(config);
+    const replacements = (0, replacements_1.getReplacements)(config);
     const replacer = (match, indent, variable) => {
         var _a;
         const replacement = (_a = replacements[variable]) !== null && _a !== void 0 ? _a : match;
@@ -13754,26 +13755,7 @@ const getScsFileName = (config, configFileName) => {
     const path = (_b = (_a = configFileName.match(/^(.+\/).+$/)) === null || _a === void 0 ? void 0 : _a.at(1)) !== null && _b !== void 0 ? _b : '';
     switch (config.type) {
         case 'domain': {
-            return `${path}domain_${config.system}.scs`;
-        }
-    }
-};
-const getReplacements = (config) => {
-    switch (config.type) {
-        case 'domain': {
-            return {
-                '#SYSTEM#': config.system,
-                '#RU#': config.ru,
-                '#EN#': config.en,
-                '#PARENT#': config.parent,
-                '#CHILDREN#': list('subject_domain_of_', config.children),
-                '#SECTION_CHILDREN#': list('section_subject_domain_of_', config.children),
-                '#MAX#': list('concept_', config.max),
-                '#CONCEPTS#': list('concept_', config.concepts),
-                '#RRELS#': list('rrel_', config.rrels),
-                '#NRELS#': list('nrel_', config.nrels),
-                '#ATOMIC#': config.children ? 'non_atomic' : 'atomic'
-            };
+            return `${path}${config.type}_${config.system}.scs`;
         }
     }
 };
@@ -13784,6 +13766,7 @@ const list = (prefix, values) => (indent) => values
         .map(value => indent + prefix + value)
         .join(';\n')
     : `${indent}...`;
+exports.list = list;
 
 
 /***/ }),
@@ -13871,6 +13854,38 @@ try {
 catch (error) {
     core.setFailed(error.message);
 }
+
+
+/***/ }),
+
+/***/ 9710:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getReplacements = void 0;
+const generate_1 = __nccwpck_require__(1324);
+const getReplacements = (config) => {
+    switch (config.type) {
+        case 'domain': {
+            return {
+                '#SYSTEM#': config.system,
+                '#RU#': config.ru,
+                '#EN#': config.en,
+                '#PARENT#': config.parent,
+                '#CHILDREN#': (0, generate_1.list)('subject_domain_of_', config.children),
+                '#SECTION_CHILDREN#': (0, generate_1.list)('section_subject_domain_of_', config.children),
+                '#MAX#': (0, generate_1.list)('concept_', config.max),
+                '#CONCEPTS#': (0, generate_1.list)('concept_', config.concepts),
+                '#RRELS#': (0, generate_1.list)('rrel_', config.rrels),
+                '#NRELS#': (0, generate_1.list)('nrel_', config.nrels),
+                '#ATOMIC#': config.children ? 'non_atomic' : 'atomic'
+            };
+        }
+    }
+};
+exports.getReplacements = getReplacements;
 
 
 /***/ }),
