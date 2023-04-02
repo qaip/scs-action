@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { Config } from './types'
+import { getReplacements } from './replacements'
 
 const TEMPLATES = new Map<Config['type'], string>()
 
@@ -28,33 +29,12 @@ const getScsFileName = (config: Config, configFileName: string): string => {
   const path = configFileName.match(/^(.+\/).+$/)?.at(1) ?? ''
   switch (config.type) {
     case 'domain': {
-      return `${path}domain_${config.system}.scs`
+      return `${path}${config.type}_${config.system}.scs`
     }
   }
 }
 
-type Replacements = Record<`#${string}#`, string | ((indent: string) => string)>
-const getReplacements = (config: Config): Replacements => {
-  switch (config.type) {
-    case 'domain': {
-      return {
-        '#SYSTEM#': config.system,
-        '#RU#': config.ru,
-        '#EN#': config.en,
-        '#PARENT#': config.parent,
-        '#CHILDREN#': list('subject_domain_of_', config.children),
-        '#SECTION_CHILDREN#': list('section_subject_domain_of_', config.children),
-        '#MAX#': list('concept_', config.max),
-        '#CONCEPTS#': list('concept_', config.concepts),
-        '#RRELS#': list('rrel_', config.rrels),
-        '#NRELS#': list('nrel_', config.nrels),
-        '#ATOMIC#': config.children ? 'non_atomic' : 'atomic'
-      }
-    }
-  }
-}
-
-const list =
+export const list =
   (prefix: string, values: string | undefined) =>
   (indent: string): string =>
     values
