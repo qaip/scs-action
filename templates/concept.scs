@@ -1,4 +1,4 @@
-#NODETYPE#_#SYSTEM#
+concept_#SYSTEM#
 => nrel_main_idtf:
 	[#RU#] (* <- lang_ru;; *);
 	[#EN#] (* <- lang_en;; *);
@@ -6,9 +6,9 @@
 	[#RU#] (* <- lang_ru;; *);
 	[#EN#] (* <- lang_en;; *);;
 
-+ /* STATEMENT */
-+ definition -> concept_#DEFINITION_FOR_CONCEPT# (*
-+ 	-> rrel_key_sc_element: #NODETYPE#_#SYSTEM#;;
++ /* DEFINITION */
++ definition -> concept_#DEFINITION_SYSTEM# (*
++ 	-> rrel_key_sc_element: concept_#SYSTEM#;;
 + 
 + 	<= nrel_sc_text_translation: ... (*
 + 		-> [#DEFINITION_RU#] (* <- lang_ru;; *);;
@@ -16,20 +16,19 @@
 + 	*);;
 + 
 + 	=> nrel_main_idtf:
-+ 		[определение: #DEFENITION_ABOUT_CONCEPT_RU#] (* <- lang_ru;; *);
-+ 		[defenition: #DEFENITION_ABOUT_CONCEPT_EN#] (* <- lang_ru;; *);;
++ 		[Определение: #DEFENITION_VALUE_RU#] (* <- lang_ru;; *);
++ 		[Defenition: #DEFENITION_VALUE_EN#] (* <- lang_en;; *);;
 + 
 + 	=> nrel_using_constants: {
-+ 		#CONCEPTS_FOR_DEFENITION#;
-+ 		#RRELS_FOR_DEFENITION#;
-+ 		#NRELS_FOR_DEFENITION#
++ 		#DEFENITION_CONCEPTS#;
++ 		#DEFENITION_RRELS#;
++ 		#DEFENITION_NRELS#
 + 	};;
 + *);;
 
-
 + /* STATEMENT */
 + statement -> concept_#STATEMENT_FOR_CONCEPT# (*
-+ 	-> rrel_key_sc_element: #NODETYPE#_#SYSTEM#;;
++ 	-> rrel_key_sc_element: concept_#SYSTEM#;;
 + 
 + 	<= nrel_sc_text_translation: ... (*
 + 		-> [#STATEMENT_RU#] (* <- lang_ru;; *);;
@@ -37,27 +36,27 @@
 + 	*);;
 + 
 + 	=> nrel_main_idtf:
-+ 		[утверждение: #STATEMENT_ABOUT_CONCEPT_RU#] (* <- lang_ru;; *);
-+ 		[statement: #STATEMENT_ABOUT_CONCEPT_EN#] (* <- lang_en;; *);;
++ 		[Утверждение: #STATEMENT_VALUE_RU#] (* <- lang_ru;; *);
++ 		[Statement: #STATEMENT_VALUE_EN#] (* <- lang_en;; *);;
 + 
 + 	=> nrel_using_constants: {
-+ 		#CONCEPTS_FOR_STATEMENT#;
-+ 		#RRELS_FOR_STATEMENT#;
-+ 		#NRELS_FOR_STATEMENT#
++ 		#STATEMENT_CONCEPTS#;
++ 		#STATEMENT_NRELS#;
++ 		#STATEMENT_RRELS#
 + 	};;
 + *);;
 
-#MAX_CONCEPT# => nrel_inclusion: #NODETYPE#_#SYSTEM#;;
+#MAX# => nrel_inclusion: concept_#SYSTEM#;;
 
 sc_node_class ->
-	#MAX_CONCEPT#;
-	#CONCEPTS_FOR_DEFENITION#;
-	#CONCEPTS_FOR_STATEMENT#;;
+	#MAX#;
+	#DEFENITION_CONCEPTS#;
+	#STATEMENT_CONCEPTS#;;
 	
 sc_node_role_relation ->
-	#RRELS_FOR_DEFENITION#;
-	#RRELS_FOR_STATEMENT#;;
+	#DEFENITION_RRELS#;
+	#DEFENITION_NRELS#;;
 
 sc_node_norole_relation ->
-	#NRELS_FOR_STATEMENT#;
-	#NRELS_FOR_DEFENITION#;;
+	#STATEMENT_RRELS#;
+	#STATEMENT_NRELS#;;

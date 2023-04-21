@@ -21,9 +21,9 @@ interface NeighbourhoodConfig {
   system: string
   en: string
   ru: string
-  definition: BaseConfig
+  definition: Omit<DefinitionConfig, 'type' | 'system'>
   statement: {
-    [system: string]: BaseConfig
+    [system: string]: Omit<StatementConfig, 'type' | 'system'>
   }
 }
 
@@ -35,10 +35,7 @@ interface ConceptConfig extends NeighbourhoodConfig {
 interface NrelConfig extends NeighbourhoodConfig {
   type: 'nrel'
   arity: 2
-  domains: {
-    first: string
-    second: string
-  }
+  domains: `${string} -> ${string}`
   properties: {
     symmetric: boolean
     reflexive: boolean
@@ -46,11 +43,15 @@ interface NrelConfig extends NeighbourhoodConfig {
   }
 }
 
-interface DefinitionConfig {
+interface DefinitionConfig extends BaseConfig {
   type: 'definition'
+  value_ru: string
+  value_en: string
 }
 
-interface StatementConfig {
+interface StatementConfig extends BaseConfig {
   type: 'statement'
   system: string
+  value_ru: string
+  value_en: string
 }

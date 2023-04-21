@@ -29,15 +29,33 @@ export const getReplacements = (config: Config | Subconfig): Replacements => {
       }
       return config.type === 'concept'
         ? {
-            ...nbhd
+            ...nbhd,
+            '#MAX#': config.max
           }
         : {
             ...nbhd
           }
     }
     case 'definition':
-      return {}
+      return {
+        '#DEFINITION_RU#': config.ru,
+        '#DEFINITION_EN#': config.en,
+        '#DEFINITION_VALUE_RU#': config.value_ru,
+        '#DEFINITION_VALUE_EN#': config.value_en,
+        '#DEFINITION_CONCEPTS#': list('concept_', config.concepts),
+        '#DEFINITION_NRELS#': list('concept_', config.nrels),
+        '#DEFINITION_RRELS#': list('concept_', config.rrels)
+      }
     case 'statement':
-      return {}
+      return {
+        '#STATEMENT_SYSTEM#': config.system,
+        '#STATEMENT_RU#': config.ru,
+        '#STATEMENT_EN#': config.en,
+        '#STATEMENT_VALUE_RU#': config.value_ru,
+        '#STATEMENT_VALUE_EN#': config.value_en,
+        '#STATEMENT_CONCEPTS#': list('concept_', config.concepts),
+        '#STATEMENT_NRELS#': list('concept_', config.nrels),
+        '#STATEMENT_RRELS#': list('concept_', config.rrels)
+      }
   }
 }
