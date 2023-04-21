@@ -1,37 +1,29 @@
 export type Config = DomainConfig | ConceptConfig | NrelConfig
+export type Subconfig = DefinitionConfig | StatementConfig
 
-interface DomainConfig {
+interface BaseConfig {
+  ru: string
+  en: string
+  concepts?: string // multiline
+  nrels?: string // multiline
+  rrels?: string // multiline
+}
+
+interface DomainConfig extends BaseConfig {
   type: 'domain'
   system: string
-  en: string
-  ru: string
   parent: string
   children?: string // multiline
   max: string // multiline
-  concepts: string // multiline
-  rrels?: string // multiline
-  nrels?: string // multiline
 }
 
 interface NeighbourhoodConfig {
   system: string
   en: string
   ru: string
-  definition: {
-    ru: string
-    en: string
-    concept: string // multiline
-    nrel: string // multiline
-    rrel: string // multiline
-  }
+  definition: BaseConfig
   statement: {
-    [system: string]: {
-      ru: string
-      en: string
-      concept: string // multiline
-      nrel: string // multiline
-      rrel: string // multiline
-    }
+    [system: string]: BaseConfig
   }
 }
 
@@ -52,4 +44,13 @@ interface NrelConfig extends NeighbourhoodConfig {
     reflexive: boolean
     transitive: boolean
   }
+}
+
+interface DefinitionConfig {
+  type: 'definition'
+}
+
+interface StatementConfig {
+  type: 'statement'
+  system: string
 }

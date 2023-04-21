@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import { Config } from './types'
+import { Config, Subconfig } from './types'
 import { getReplacements } from './replacements'
 
 const TEMPLATES = new Map<Config['type'], string>()
@@ -11,14 +11,7 @@ export const generateScsFile = (config: Config, configFileName: string): { name:
   }
   const template = TEMPLATES.get(config.type) ?? ''
 
-  const replacements = getReplacements(config)
-
-  const replacer = (match: string, indent: string, variable: `#${string}#`): string => {
-    const replacement = replacements[variable] ?? match
-    return typeof replacement === 'string' ? replacement : replacement(indent)
-  }
-
-  const scs = template.replace(/(\t*)(#[^#]+#)/g, replacer)
+  const scs = replace(template, config)
   return {
     name: getScsFileName(config, configFileName),
     content: Buffer.from(scs, 'utf-8').toString('base64')
@@ -29,6 +22,12 @@ const getScsFileName = (config: Config, configFileName: string): string => {
   const path = configFileName.match(/^(.+\/).+$/)?.at(1) ?? ''
   switch (config.type) {
     case 'domain': {
+      return `${path}${config.type}_${config.system}.scs`
+    }
+    case 'concept': {
+      return `${path}${config.type}_${config.system}.scs`
+    }
+    case 'nrel': {
       return `${path}${config.type}_${config.system}.scs`
     }
   }
@@ -45,6 +44,11 @@ export const list =
           .join(';\n')
       : `${indent}...`
 
-export const replace = () => {
-  
+export const replace = (template: string, config: Config | Subconfig): string => {
+  const replacements = getReplacements(config)
+  const replacer = (match: string, indent: string, variable: `#${string}#`): string => {
+    const replacement = replacements[variable] ?? match
+    return typeof replacement === 'string' ? replacement : replacement(indent)
+  }
+  return template.replace(/(\t*)(#[^#]+#)/g, replacer)
 }

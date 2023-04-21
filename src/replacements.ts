@@ -1,8 +1,8 @@
 import { list, replace } from './generate'
-import { Config } from './types'
+import { Config, Subconfig } from './types'
 
 type Replacements = Record<`#${string}#`, string | ((indent: string) => string)>
-export const getReplacements = (config: Config): Replacements => {
+export const getReplacements = (config: Config | Subconfig): Replacements => {
   switch (config.type) {
     case 'domain': {
       return {
@@ -22,9 +22,10 @@ export const getReplacements = (config: Config): Replacements => {
     case 'concept':
     case 'nrel': {
       const nbhd: Replacements = {
-        '#STATEMENT#': Object.entries(config.statement)
-          .map(([system, variables]) => replace({ type: 'concept', system, ...variables }))
-          .join('\n')
+        '#STATEMENT#': (template: string) =>
+          Object.entries(config.statement)
+            .map(([system, variables]) => replace(template, { type: 'statement', system, ...variables }))
+            .join('\n')
       }
       return config.type === 'concept'
         ? {
@@ -34,5 +35,9 @@ export const getReplacements = (config: Config): Replacements => {
             ...nbhd
           }
     }
+    case 'definition':
+      return {}
+    case 'statement':
+      return {}
   }
 }
