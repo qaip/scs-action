@@ -22,7 +22,7 @@ export const getReplacements = (config: Config | Subconfig): Replacements => {
     case 'concept':
     case 'nrel': {
       const nbhd: Replacements = {
-        '#STATEMENT#': (template: string) =>
+        '#STATEMENT#': template =>
           Object.entries(config.statement)
             .map(([system, variables]) => replace(template, { type: 'statement', system, ...variables }))
             .join('\n')

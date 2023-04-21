@@ -50,5 +50,11 @@ export const replace = (template: string, config: Config | Subconfig): string =>
     const replacement = replacements[variable] ?? match
     return typeof replacement === 'string' ? replacement : replacement(indent)
   }
-  return template.replace(/(\t*)(#[^#]+#)/g, replacer)
+  const subtemplateReplacer = (match: string, variable: `#${string}#`, block: string): string => {
+    const replacement = replacements[variable] ?? match
+    const subtemplate = block.replace(/(\n|^)\+ /g, (_match: string, start: string) => start)
+    return typeof replacement === 'function' ? replacement(subtemplate) : replacement
+  }
+  const plainTemplate = template.replace(/\+ \/\* ([^#]+) \*\/\n(.+)\n\n/s, subtemplateReplacer)
+  return plainTemplate.replace(/(\t*)(#[^#]+#)/g, replacer)
 }
