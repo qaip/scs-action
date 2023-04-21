@@ -44,3 +44,7 @@ export const list =
           .map(value => indent + prefix + value)
           .join(';\n')
       : `${indent}...`
+
+export const replace = () => {
+  
+}

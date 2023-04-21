@@ -1,0 +1,58 @@
+# sn_directed_graph.sc.yaml
+type: semantic_neighborhood
+
+system: directed_graph
+
+ru: Ориентированный граф | Орграф
+en: Directed Graph | Digraph
+
+definition:
+  - ru:
+      Ориентированный граф — это пара (V, A), где V — множество вершин,A —
+      множество ориентированных ребер, которые называются дугами.
+    en:
+    concept:
+      graph
+      directed_graph
+    nrel:
+      vertex
+    rrel:
+      arc
+  - ru:
+    en:
+    using:
+
+statement:
+  diected_graph_and_magic_vertex:
+    ru:
+    en:
+    concept:
+      graph
+      directed_raph
+    nrel:
+      vertex
+      magic_vertex
+
+  diected_graph_and_magic_edge:
+    ru:
+    en:
+    concept:
+      graph
+      directed_raph
+      magic_vertex
+      vertex
+    nrel:
+      vertex
+
+# concept only
+max: graph
+
+# rel only
+arity: 2
+
+domains: graph graph
+
+properties:
+  symmetric: yes
+  reflexive: yes
+  transitive: no

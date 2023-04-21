@@ -1,4 +1,4 @@
-import { list } from './generate'
+import { list, replace } from './generate'
 import { Config } from './types'
 
 type Replacements = Record<`#${string}#`, string | ((indent: string) => string)>
@@ -18,6 +18,21 @@ export const getReplacements = (config: Config): Replacements => {
         '#NRELS#': list('nrel_', config.nrels),
         '#ATOMIC#': config.children ? 'non_atomic' : 'atomic'
       }
+    }
+    case 'concept':
+    case 'nrel': {
+      const nbhd: Replacements = {
+        '#STATEMENT#': Object.entries(config.statement)
+          .map(([system, variables]) => replace({ type: 'concept', system, ...variables }))
+          .join('\n')
+      }
+      return config.type === 'concept'
+        ? {
+            ...nbhd
+          }
+        : {
+            ...nbhd
+          }
     }
   }
 }
