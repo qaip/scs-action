@@ -13726,46 +13726,60 @@ function wrappy (fn, cb) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.list = exports.generateScsFile = void 0;
+exports.list = exports.replace = exports.generateScsFile = void 0;
 const fs_1 = __nccwpck_require__(7147);
 const path_1 = __nccwpck_require__(1017);
 const replacements_1 = __nccwpck_require__(9710);
 const TEMPLATES = new Map();
-const generateScsFile = (config, configFileName) => {
+const generateScsFile = (config, path, encode = true) => {
     var _a;
     if (!TEMPLATES.has(config.configType)) {
         TEMPLATES.set(config.configType, (0, fs_1.readFileSync)((0, path_1.join)(__dirname, `templates/${config.configType}.scs`), { encoding: 'utf8' }));
     }
     const template = (_a = TEMPLATES.get(config.configType)) !== null && _a !== void 0 ? _a : '';
-    const replacements = (0, replacements_1.getReplacements)(config);
-    const replacer = (match, indent, variable) => {
-        var _a;
-        const replacement = (_a = replacements[variable]) !== null && _a !== void 0 ? _a : match;
-        return typeof replacement === 'string' ? replacement : replacement(indent);
-    };
-    const scs = template.replace(/(\t*)(#[^#]+#)/g, replacer);
+    const scs = (0, exports.replace)(template, config);
     return {
-        name: getScsFileName(config, configFileName),
-        content: Buffer.from(scs, 'utf-8').toString('base64')
+        name: `${path}${config.configType}_${config.system}.scs`,
+        content: encode ? Buffer.from(scs, 'utf-8').toString('base64') : scs
     };
 };
 exports.generateScsFile = generateScsFile;
-const getScsFileName = (config, configFileName) => {
-    var _a, _b;
-    const path = (_b = (_a = configFileName.match(/^(.+\/).+$/)) === null || _a === void 0 ? void 0 : _a.at(1)) !== null && _b !== void 0 ? _b : '';
-    switch (config.configType) {
-        case 'domain': {
-            return `${path}${config.configType}_${config.system}.scs`;
-        }
-    }
+const replace = (template, config) => {
+    const replacements = (0, replacements_1.getReplacements)(config);
+    const blockReplacer = (match, variable, block) => {
+        var _a;
+        const replacement = (_a = replacements[variable]) !== null && _a !== void 0 ? _a : match;
+        const subtemplate = block.replace(/^\+ /gm, '');
+        return typeof replacement === 'function' ? replacement(subtemplate) : replacement;
+    };
+    const lineReplacer = (_match, prefix, variable, postfix) => {
+        var _a;
+        const replacement = (_a = replacements[variable]) !== null && _a !== void 0 ? _a : variable;
+        return typeof replacement === 'function' ? replacement(prefix, postfix) : replacement;
+    };
+    const replacer = (_match, indent, variable) => {
+        var _a;
+        const replacement = (_a = replacements[variable]) !== null && _a !== void 0 ? _a : variable;
+        return typeof replacement === 'function' ? replacement(indent) : indent + replacement;
+    };
+    return template
+        .replace(/^\+ \/\* (#\w+#) \*\/\n((\+ [^\n]*\n)+)/gms, blockReplacer)
+        .replace(/^- (.+)(#\w+#)(.+)/gm, lineReplacer)
+        .replace(/(\t*)(#\w+#)/gm, replacer);
 };
-const list = (prefix, values) => (indent) => values
-    ? values
-        .split('\n')
-        .filter(Boolean)
-        .map(value => indent + prefix + value)
-        .join(';\n')
-    : `${indent}...`;
+exports.replace = replace;
+const list = (pre, values, semi = false) => (prefix, postfix = '') => {
+    if (semi) {
+        postfix = postfix.replace(/;$/, '');
+    }
+    return values && values.trim()
+        ? values
+            .split('\n')
+            .filter(Boolean)
+            .map(value => prefix + pre + value + postfix)
+            .join(`${postfix ? '' : ';'}\n`) + (semi ? ';' : '')
+        : `${prefix}...${postfix}`;
+};
 exports.list = list;
 
 
@@ -13838,7 +13852,7 @@ function run() {
             filesContent = filesContent.filter(content => content.trim());
         }
         // Generate scs files
-        const files = filesContent.map((content, index) => (0, generate_1.generateScsFile)((0, validate_1.parse)(content), fileNames[index]));
+        const files = filesContent.map((content, index) => (0, generate_1.generateScsFile)(...(0, validate_1.parse)(content, fileNames[index])));
         // Commit and push generated scs files
         const commitUrl = yield (0, requests_1.commitFiles)(octokit, {
             repo: payload.repository.full_name,
@@ -13867,6 +13881,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getReplacements = void 0;
 const generate_1 = __nccwpck_require__(1324);
 const getReplacements = (config) => {
+    var _a, _b, _c, _d, _e, _f;
+    const toArray = (value) => (typeof value === 'string' ? value.split(' | ') : value);
     switch (config.configType) {
         case 'domain': {
             return {
@@ -13883,6 +13899,42 @@ const getReplacements = (config) => {
                 '#ATOMIC#': config.children ? 'non_atomic' : 'atomic'
             };
         }
+        case 'concept':
+        case 'nrel': {
+            const statements = config.statement ? Object.entries(config.statement) : [];
+            const nbhd = {
+                '#SYSTEM#': config.system,
+                '#RU#': toArray(config.ru)[0],
+                '#EN#': toArray(config.en)[0],
+                '#RU_ALT#': (0, generate_1.list)('', toArray(config.ru).slice(1).join('\n')),
+                '#EN_ALT#': (0, generate_1.list)('', toArray(config.en).slice(1).join('\n'), true),
+                '#DEFINITION_RU#': (0, generate_1.list)('', toArray(config.definition.ru).join('\n')),
+                '#DEFINITION_EN#': (0, generate_1.list)('', toArray(config.definition.en).join('\n')),
+                '#DEFINITION_CONCEPTS#': (0, generate_1.list)('concept_', (_a = config.definition.using) === null || _a === void 0 ? void 0 : _a.concepts),
+                '#DEFINITION_NRELS#': (0, generate_1.list)('concept_', (_b = config.definition.using) === null || _b === void 0 ? void 0 : _b.nrels),
+                '#DEFINITION_RRELS#': (0, generate_1.list)('concept_', (_c = config.definition.using) === null || _c === void 0 ? void 0 : _c.rrels),
+                '#STATEMENT#': template => config.statement
+                    ? statements
+                        .map(([system, variables]) => (0, generate_1.replace)(template, Object.assign({ configType: 'statement', system }, variables)))
+                        .join('\n')
+                    : '',
+                '#STATEMENT_CONCEPTS_ALL#': (0, generate_1.list)('concepts_', statements.map(statement => { var _a; return (_a = statement[1].using) === null || _a === void 0 ? void 0 : _a.concepts; }).join('\n')),
+                '#STATEMENT_NRELS_ALL#': (0, generate_1.list)('nrels_', statements.map(statement => { var _a; return (_a = statement[1].using) === null || _a === void 0 ? void 0 : _a.nrels; }).join('\n')),
+                '#STATEMENT_RRELS_ALL#': (0, generate_1.list)('rrels_', statements.map(statement => { var _a; return (_a = statement[1].using) === null || _a === void 0 ? void 0 : _a.rrels; }).join('\n'))
+            };
+            return config.configType === 'concept' ? Object.assign(Object.assign({}, nbhd), { '#MAX#': config.max }) : Object.assign({}, nbhd);
+        }
+        case 'statement':
+            return {
+                '#STATEMENT_SYSTEM#': config.system,
+                '#STATEMENT_RU#': (0, generate_1.list)('', toArray(config.ru).join('\n')),
+                '#STATEMENT_EN#': (0, generate_1.list)('', toArray(config.en).join('\n')),
+                '#STATEMENT_TITLE_RU#': config.title.ru,
+                '#STATEMENT_TITLE_EN#': config.title.en,
+                '#STATEMENT_CONCEPTS#': (0, generate_1.list)('concept_', (_d = config.using) === null || _d === void 0 ? void 0 : _d.concepts),
+                '#STATEMENT_NRELS#': (0, generate_1.list)('concept_', (_e = config.using) === null || _e === void 0 ? void 0 : _e.nrels),
+                '#STATEMENT_RRELS#': (0, generate_1.list)('concept_', (_f = config.using) === null || _f === void 0 ? void 0 : _f.rrels)
+            };
     }
 };
 exports.getReplacements = getReplacements;
@@ -13991,7 +14043,7 @@ Object.defineProperty(exports, "getPullRequestData", ({ enumerable: true, get: f
 /***/ }),
 
 /***/ 1992:
-/***/ (function(__unused_webpack_module, exports) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -14006,6 +14058,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequestData = void 0;
+const types_1 = __nccwpck_require__(5077);
 const getPullRequestData = (octokit, variables) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const query = /* GraphQL */ `
@@ -14035,7 +14088,7 @@ const getPullRequestData = (octokit, variables) => __awaiter(void 0, void 0, voi
     const { repository } = yield octokit.graphql(query, variables);
     const fileNames = repository.pullRequest.files.nodes
         .map(node => node.path)
-        .filter(path => /^.+\.sc\.ya?ml$/.test(path));
+        .filter(path => new RegExp(`^.+\\.(${types_1.configTypes.join('|')})\\.ya?ml$`).test(path));
     const commitOid = (_a = repository.pullRequest.headRef.target.history.nodes.at(0)) === null || _a === void 0 ? void 0 : _a.oid;
     if (!commitOid) {
         throw new Error('Commit Oid is not found');
@@ -14043,6 +14096,18 @@ const getPullRequestData = (octokit, variables) => __awaiter(void 0, void 0, voi
     return { fileNames, commitOid };
 });
 exports.getPullRequestData = getPullRequestData;
+
+
+/***/ }),
+
+/***/ 5077:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.configTypes = void 0;
+exports.configTypes = ['concept', 'domain', 'nrel'];
 
 
 /***/ }),
@@ -14055,10 +14120,13 @@ exports.getPullRequestData = getPullRequestData;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.isConfig = exports.parse = void 0;
 const js_yaml_1 = __nccwpck_require__(1917);
-const parse = (text) => {
+const parse = (text, fileName) => {
     const config = (0, js_yaml_1.load)(text);
     if (isConfig(config)) {
-        return config;
+        const [, path, system, configType] = fileName.match(/^(.+\/)?(.+)\.(.+)\.ya?ml$/);
+        config.system = system;
+        config.configType = configType;
+        return [config, path !== null && path !== void 0 ? path : ''];
     }
     throw new Error('Config is not valid. why?');
 };
