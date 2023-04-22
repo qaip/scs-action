@@ -1,60 +1,58 @@
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import { Config, Subconfig } from './types'
 import { getReplacements } from './replacements'
+import { Config, Subconfig } from './types'
 
-const TEMPLATES = new Map<Config['type'], string>()
+const TEMPLATES = new Map<Config['configType'], string>()
 
-export const generateScsFile = (config: Config, configFileName: string): { name: string; content: string } => {
-  if (!TEMPLATES.has(config.type)) {
-    TEMPLATES.set(config.type, readFileSync(join(__dirname, `templates/${config.type}.scs`), { encoding: 'utf8' }))
+export const generateScsFile = (config: Config, path: string, encode = true): { name: string; content: string } => {
+  if (!TEMPLATES.has(config.configType)) {
+    TEMPLATES.set(
+      config.configType,
+      readFileSync(join(__dirname, `templates/${config.configType}.scs`), { encoding: 'utf8' })
+    )
   }
-  const template = TEMPLATES.get(config.type) ?? ''
+  const template = TEMPLATES.get(config.configType) ?? ''
 
   const scs = replace(template, config)
   return {
-    name: getScsFileName(config, configFileName),
-    content: Buffer.from(scs, 'utf-8').toString('base64')
+    name: `${path}${config.configType}_${config.system}.scs`,
+    content: encode ? Buffer.from(scs, 'utf-8').toString('base64') : scs
   }
 }
-
-const getScsFileName = (config: Config, configFileName: string): string => {
-  const path = configFileName.match(/^(.+\/).+$/)?.at(1) ?? ''
-  switch (config.type) {
-    case 'domain': {
-      return `${path}${config.type}_${config.system}.scs`
-    }
-    case 'concept': {
-      return `${path}${config.type}_${config.system}.scs`
-    }
-    case 'nrel': {
-      return `${path}${config.type}_${config.system}.scs`
-    }
-  }
-}
-
-export const list =
-  (prefix: string, values: string | undefined) =>
-  (indent: string): string =>
-    values
-      ? values
-          .split('\n')
-          .filter(Boolean)
-          .map(value => indent + prefix + value)
-          .join(';\n')
-      : `${indent}...`
 
 export const replace = (template: string, config: Config | Subconfig): string => {
   const replacements = getReplacements(config)
-  const replacer = (match: string, indent: string, variable: `#${string}#`): string => {
+  const blockReplacer = (match: string, variable: `#${string}#`, block: string): string => {
     const replacement = replacements[variable] ?? match
-    return typeof replacement === 'string' ? replacement : replacement(indent)
-  }
-  const subtemplateReplacer = (match: string, variable: `#${string}#`, block: string): string => {
-    const replacement = replacements[variable] ?? match
-    const subtemplate = block.replace(/(\n|^)\+ /g, (_match: string, start: string) => start)
+    const subtemplate = block.replace(/^\+ /gm, '')
     return typeof replacement === 'function' ? replacement(subtemplate) : replacement
   }
-  const plainTemplate = template.replace(/\+ \/\* ([^#]+) \*\/\n(.+)\n\n/s, subtemplateReplacer)
-  return plainTemplate.replace(/(\t*)(#[^#]+#)/g, replacer)
+  const lineReplacer = (_match: string, prefix: string, variable: `#${string}#`, postfix: string): string => {
+    const replacement = replacements[variable] ?? variable
+    return typeof replacement === 'function' ? replacement(prefix, postfix) : replacement
+  }
+  const replacer = (_match: string, indent: string, variable: `#${string}#`): string => {
+    const replacement = replacements[variable] ?? variable
+    return typeof replacement === 'function' ? replacement(indent) : indent + replacement
+  }
+  return template
+    .replace(/^\+ \/\* (#\w+#) \*\/\n((\+ [^\n]*\n)+)/gms, blockReplacer)
+    .replace(/^- (.+)(#\w+#)(.+)/gm, lineReplacer)
+    .replace(/(\t*)(#\w+#)/gm, replacer)
 }
+
+export const list =
+  (pre: string, values: string | undefined, semi = false) =>
+  (prefix: string, postfix = ''): string => {
+    if (semi) {
+      postfix = postfix.replace(/;$/, '')
+    }
+    return values && values.trim()
+      ? values
+          .split('\n')
+          .filter(Boolean)
+          .map(value => prefix + pre + value + postfix)
+          .join(`${postfix ? '' : ';'}\n`) + (semi ? ';' : '')
+      : `${prefix}...${postfix}`
+  }

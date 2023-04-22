@@ -1,39 +1,42 @@
 export type Config = DomainConfig | ConceptConfig | NrelConfig
-export type Subconfig = DefinitionConfig | StatementConfig
+export type Subconfig = StatementConfig
 
-interface BaseConfig {
-  ru: string
-  en: string
+interface Identifiers<T = string | string[]> {
+  ru: T
+  en: T
+}
+
+interface Nodes {
   concepts?: string // multiline
   nrels?: string // multiline
   rrels?: string // multiline
 }
 
-interface DomainConfig extends BaseConfig {
-  type: 'domain'
+interface DomainConfig extends Identifiers<string>, Nodes {
+  configType: 'domain'
   system: string
   parent: string
   children?: string // multiline
   max: string // multiline
 }
 
-interface NeighbourhoodConfig {
+interface NeighbourhoodConfig extends Identifiers {
   system: string
-  en: string
-  ru: string
-  definition: Omit<DefinitionConfig, 'type' | 'system'>
-  statement: {
-    [system: string]: Omit<StatementConfig, 'type' | 'system'>
+  definition: Identifiers & {
+    using?: Nodes
+  }
+  statement?: {
+    [system: string]: Omit<StatementConfig, 'configType' | 'system'>
   }
 }
 
 interface ConceptConfig extends NeighbourhoodConfig {
-  type: 'concept'
+  configType: 'concept'
   max: string
 }
 
 interface NrelConfig extends NeighbourhoodConfig {
-  type: 'nrel'
+  configType: 'nrel'
   arity: 2
   domains: `${string} -> ${string}`
   properties: {
@@ -43,15 +46,11 @@ interface NrelConfig extends NeighbourhoodConfig {
   }
 }
 
-interface DefinitionConfig extends BaseConfig {
-  type: 'definition'
-  value_ru: string
-  value_en: string
+interface StatementConfig extends Identifiers {
+  configType: 'statement'
+  system: string
+  title: Identifiers<string>
+  using?: Nodes
 }
 
-interface StatementConfig extends BaseConfig {
-  type: 'statement'
-  system: string
-  value_ru: string
-  value_en: string
-}
+export const configTypes: Config['configType'][] = ['concept', 'domain', 'nrel']

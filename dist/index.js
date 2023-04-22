@@ -13733,10 +13733,10 @@ const replacements_1 = __nccwpck_require__(9710);
 const TEMPLATES = new Map();
 const generateScsFile = (config, configFileName) => {
     var _a;
-    if (!TEMPLATES.has(config.type)) {
-        TEMPLATES.set(config.type, (0, fs_1.readFileSync)((0, path_1.join)(__dirname, `templates/${config.type}.scs`), { encoding: 'utf8' }));
+    if (!TEMPLATES.has(config.configType)) {
+        TEMPLATES.set(config.configType, (0, fs_1.readFileSync)((0, path_1.join)(__dirname, `templates/${config.configType}.scs`), { encoding: 'utf8' }));
     }
-    const template = (_a = TEMPLATES.get(config.type)) !== null && _a !== void 0 ? _a : '';
+    const template = (_a = TEMPLATES.get(config.configType)) !== null && _a !== void 0 ? _a : '';
     const replacements = (0, replacements_1.getReplacements)(config);
     const replacer = (match, indent, variable) => {
         var _a;
@@ -13753,9 +13753,9 @@ exports.generateScsFile = generateScsFile;
 const getScsFileName = (config, configFileName) => {
     var _a, _b;
     const path = (_b = (_a = configFileName.match(/^(.+\/).+$/)) === null || _a === void 0 ? void 0 : _a.at(1)) !== null && _b !== void 0 ? _b : '';
-    switch (config.type) {
+    switch (config.configType) {
         case 'domain': {
-            return `${path}${config.type}_${config.system}.scs`;
+            return `${path}${config.configType}_${config.system}.scs`;
         }
     }
 };
@@ -13867,7 +13867,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getReplacements = void 0;
 const generate_1 = __nccwpck_require__(1324);
 const getReplacements = (config) => {
-    switch (config.type) {
+    switch (config.configType) {
         case 'domain': {
             return {
                 '#SYSTEM#': config.system,

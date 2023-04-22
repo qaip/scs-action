@@ -1,5 +1,6 @@
 {
   "yaml.schemas": {
     "https://unpkg.com/graphql-config/config-schema.json": "graphqlrc.yml",
+    "schemas/scyaml.schema.json": "*.sc.yaml"
   }
 }

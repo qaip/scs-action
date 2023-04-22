@@ -1,4 +1,5 @@
 import { Octokit } from '.'
+import { configTypes } from '../types'
 
 export const getPullRequestData = async (
   octokit: Octokit,
@@ -42,7 +43,7 @@ export const getPullRequestData = async (
 
   const fileNames = repository.pullRequest.files.nodes
     .map(node => node.path)
-    .filter(path => /^.+\.sc\.ya?ml$/.test(path))
+    .filter(path => new RegExp(`^.+\\.(${configTypes.join('|')})\\.ya?ml$`).test(path))
 
   const commitOid = repository.pullRequest.headRef.target.history.nodes.at(0)?.oid
   if (!commitOid) {
