@@ -38,7 +38,7 @@ async function run(): Promise<void> {
   }
 
   // Generate scs files
-  const files = filesContent.map((content, index) => generateScsFile(parse(content), fileNames[index]))
+  const files = filesContent.map((content, index) => generateScsFile(...parse(content, fileNames[index])))
 
   // Commit and push generated scs files
   const commitUrl = await commitFiles(

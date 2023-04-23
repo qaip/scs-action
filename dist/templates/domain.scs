@@ -4,7 +4,7 @@ section_subject_domain_of_#SYSTEM#
 
 => nrel_main_idtf:
 	[Раздел. Предметная область #RU#] (* <- lang_ru;; *);
-	[Section. Subject Domain of #EN#] (* <- lang_en;; *);
+	[Section. Subject domain of #EN#] (* <- lang_en;; *);
 
 <= nrel_section_decomposition: {
 	#SECTION_CHILDREN#

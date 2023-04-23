@@ -12,11 +12,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm install
-      - run: npm run all
-
-  # make sure the action works on a clean machine without building
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./
+      - run: npm run build
+      - run: npm run test
