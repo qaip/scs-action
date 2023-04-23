@@ -1,0 +1,95 @@
+concept_scs_automation
+=> nrel_main_idtf:
+	[Автоматизация SCs] (* <- lang_ru;; *);
+	[SCs Automation] (* <- lang_en;; *);
+
+=> nrel_idtf:
+	[...] (* <- lang_ru;; *);
+	[scs-automation] (* <- lang_en;; *);
+	[scs action] (* <- lang_en;; *);;
+
+definition -> definition_of_scs_automation (*
+	-> rrel_key_sc_element: concept_scs_automation;;
+
+	<= nrel_sc_text_translation: ... (*
+		-> [Инструмент автоматизации и оптимизации создания scs-файлов с использованием GitHub Actions - Инструмент разработки базы знаний] (* <- lang_ru;; *);;
+		-> [A tool for automation and optimization scs files creation using GitHub Actions] (* <- lang_en;; *);;
+		-> [A knowledge base development tool] (* <- lang_en;; *);;
+	*);;
+
+	=> nrel_main_idtf:
+		[Опр. (Автоматизация SCs)] (* <- lang_ru;; *);
+		[Def. (SCs Automation)] (* <- lang_en;; *);;
+
+	=> nrel_using_constants: {
+		concept_knowledge_base;
+		concept_development_tool;
+		concept_scs_file;
+		...;
+		nrels_automation;
+		nrels_optimization
+	};;
+*);;
+
+statement -> statement_of_scs_automation_motivation (*
+	-> rrel_key_sc_element: concept_scs_automation;;
+
+	<= nrel_sc_text_translation: ... (*
+		-> [Автоматизация SCs позволяет разработчикам описывать базу знаний без какого-либо дублирования или написания шаблонного кода] (* <- lang_ru;; *);;
+		-> [SCs Automation lets developers describe a knowledge base without any duplicates and boilerplate code] (* <- lang_en;; *);;
+	*);;
+
+	=> nrel_main_idtf:
+		[Утв. (Мотивация Автоматизации SCs)] (* <- lang_ru;; *);
+		[Stat. (SCs Automation Motivation)] (* <- lang_en;; *);;
+
+	=> nrel_using_constants: {
+		concept_developer;
+		concept_knowledge_base;
+		concept_duplicate;
+		concept_boilerplate_code;
+		...;
+		...
+	};;
+*);;
+
+statement -> statement_of_scs_automation_and_code_style_problem (*
+	-> rrel_key_sc_element: concept_scs_automation;;
+
+	<= nrel_sc_text_translation: ... (*
+		-> [Автоматизация SCs решает проблему стандарта оформления кода] (* <- lang_ru;; *);;
+		-> [SCs Automation solves the code style problem] (* <- lang_en;; *);;
+	*);;
+
+	=> nrel_main_idtf:
+		[Утв. (Автоматизация SCs и проблема стандарта оформления кода)] (* <- lang_ru;; *);
+		[Stat. (SCs Automation and Code Style Problem)] (* <- lang_en;; *);;
+
+	=> nrel_using_constants: {
+		concept_code_style_problem;
+		nrels_solution;
+		rrels_fake_relation
+	};;
+*);;
+
+concept_ostis_devops => nrel_inclusion: concept_scs_automation;;
+
+sc_node_class ->
+	ostis_devops;
+	concept_knowledge_base;
+	concept_development_tool;
+	concept_scs_file;
+	concepts_developer;
+	concepts_knowledge_base;
+	concepts_duplicate;
+	concepts_boilerplate_code;
+	concepts_code_style_problem;;
+
+sc_node_norole_relation ->
+	nrels_automation;
+	nrels_optimization;
+	nrels_solution;;
+
+sc_node_role_relation ->
+	...;
+	rrels_fake_relation;;

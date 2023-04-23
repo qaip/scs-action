@@ -1,2 +1,3 @@
 /node_modules/
 schema.docs.graphql
+tests/.actual/

@@ -1,0 +1,80 @@
+section_subject_domain_of_ostis_automation
+
+<- non_atomic_section;
+
+=> nrel_main_idtf:
+	[Раздел. Предметная область автоматизации разработки ostis-систем] (* <- lang_ru;; *);
+	[Section. Subject domain of ostis-system development automation] (* <- lang_en;; *);
+
+<= nrel_section_decomposition: {
+	section_subject_domain_of_personal_ostis_assistent_development_automation_tools;
+	section_subject_domain_of_sc_agent_development_automation_tools
+};
+
+<- rrel_key_sc_element:
+	subject_domain_of_ostis_automation;
+	concept_ostis_system_development_automation;
+	concept_ostis_system_developement_automation_tool;
+	concept_personal_ostis_assistent_development_automation_tool;
+	concept_sc_agent_development_automation_tool;
+	concept_ostis_system_development_operation;
+	concept_ostis_archops_tool;
+	concept_ostis_cicd_tool;
+	concept_ostis_cicd_pipeline;
+	concept_ostis_automation_action;
+	concept_scs_automation;
+	rrel_ostis_automation_entrypoint;
+	nrel_ostis_automation_next_step;;
+
+section_subject_domain_of_ostis_automation=[*
+	subject_domain_of_ostis_automation
+	<- sc_node_struct;
+	<- subject_domain;
+	=> nrel_main_idtf:
+		[Предметная область автоматизации разработки ostis-систем] (* <- lang_ru;; *);
+		[Subject Domain of ostis-system development automation] (* <- lang_en;; *);
+
+	-> rrel_maximum_studied_object_class:
+		concept_ostis_system_development_automation;
+
+	-> rrel_not_maximum_studied_object_class:
+		concept_ostis_system_developement_automation_tool;
+		concept_personal_ostis_assistent_development_automation_tool;
+		concept_sc_agent_development_automation_tool;
+		concept_ostis_system_development_operation;
+		concept_ostis_archops_tool;
+		concept_ostis_cicd_tool;
+		concept_ostis_cicd_pipeline;
+		concept_ostis_automation_action;
+		concept_scs_automation;
+
+	-> rrel_explored_relation:
+		rrel_ostis_automation_entrypoint;
+		nrel_ostis_automation_next_step;
+
+	<= nrel_private_subject_domain:
+		subject_domain_of_ostis_system_development;
+
+	=> nrel_private_subject_domain:
+		subject_domain_of_personal_ostis_assistent_development_automation_tools;
+		subject_domain_of_sc_agent_development_automation_tools;;
+*];;
+
+
+sc_node_class ->
+	concept_ostis_system_development_automation;
+	concept_ostis_system_developement_automation_tool;
+	concept_personal_ostis_assistent_development_automation_tool;
+	concept_sc_agent_development_automation_tool;
+	concept_ostis_system_development_operation;
+	concept_ostis_archops_tool;
+	concept_ostis_cicd_tool;
+	concept_ostis_cicd_pipeline;
+	concept_ostis_automation_action;
+	concept_scs_automation;;
+
+sc_node_role_relation ->
+	rrel_ostis_automation_entrypoint;;
+
+sc_node_norole_relation ->
+	nrel_ostis_automation_next_step;;

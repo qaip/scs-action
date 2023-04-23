@@ -1,0 +1,62 @@
+concept_#SYSTEM#
+=> nrel_main_idtf:
+	[#RU#] (* <- lang_ru;; *);
+	[#EN#] (* <- lang_en;; *);
+
+=> nrel_idtf:
+- 	[#RU_ALT#] (* <- lang_ru;; *);
+- 	[#EN_ALT#] (* <- lang_en;; *);;
+
+definition -> definition_of_#SYSTEM# (*
+	-> rrel_key_sc_element: concept_#SYSTEM#;;
+
+	<= nrel_sc_text_translation: ... (*
+- 		-> [#DEFINITION_RU#] (* <- lang_ru;; *);;
+- 		-> [#DEFINITION_EN#] (* <- lang_en;; *);;
+	*);;
+
+	=> nrel_main_idtf:
+		[Опр. (#RU#)] (* <- lang_ru;; *);
+		[Def. (#EN#)] (* <- lang_en;; *);;
+
+	=> nrel_using_constants: {
+		#DEFINITION_CONCEPTS#;
+		#DEFINITION_RRELS#;
+		#DEFINITION_NRELS#
+	};;
+*);;
+
++ /* #STATEMENT# */
++ statement -> statement_of_#STATEMENT_SYSTEM# (*
++ 	-> rrel_key_sc_element: concept_#SYSTEM#;;
++ 
++ 	<= nrel_sc_text_translation: ... (*
++ - 		-> [#STATEMENT_RU#] (* <- lang_ru;; *);;
++ - 		-> [#STATEMENT_EN#] (* <- lang_en;; *);;
++ 	*);;
++ 
++ 	=> nrel_main_idtf:
++ 		[Утв. (#STATEMENT_TITLE_RU#)] (* <- lang_ru;; *);
++ 		[Stat. (#STATEMENT_TITLE_EN#)] (* <- lang_en;; *);;
++ 
++ 	=> nrel_using_constants: {
++ 		#STATEMENT_CONCEPTS#;
++ 		#STATEMENT_NRELS#;
++ 		#STATEMENT_RRELS#
++ 	};;
++ *);;
+
+concept_#MAX# => nrel_inclusion: concept_#SYSTEM#;;
+
+sc_node_class ->
+	#MAX#;
+	#DEFINITION_CONCEPTS#;
+	#STATEMENT_CONCEPTS_ALL#;;
+
+sc_node_norole_relation ->
+	#DEFINITION_NRELS#;
+	#STATEMENT_NRELS_ALL#;;
+
+sc_node_role_relation ->
+	#DEFINITION_RRELS#;
+	#STATEMENT_RRELS_ALL#;;
