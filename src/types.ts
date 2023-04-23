@@ -53,4 +53,4 @@ interface StatementConfig extends Identifiers {
   using?: Nodes
 }
 
-export const configTypes: Config['configType'][] = ['concept', 'domain', 'nrel']
+export const configTypes: Config['configType'][] = ['concept', 'domain']
