@@ -13731,7 +13731,7 @@ const fs_1 = __nccwpck_require__(7147);
 const path_1 = __nccwpck_require__(1017);
 const replacements_1 = __nccwpck_require__(9710);
 const TEMPLATES = new Map();
-const generateScsFile = (config, path, encode = true) => {
+const generateScsFile = (config, path) => {
     var _a;
     if (!TEMPLATES.has(config.configType)) {
         TEMPLATES.set(config.configType, (0, fs_1.readFileSync)((0, path_1.join)(__dirname, `templates/${config.configType}.scs`), { encoding: 'utf8' }));
@@ -13740,7 +13740,7 @@ const generateScsFile = (config, path, encode = true) => {
     const scs = (0, exports.replace)(template, config);
     return {
         name: `${path}${config.configType}_${config.system}.scs`,
-        content: encode ? Buffer.from(scs, 'utf-8').toString('base64') : scs
+        content: Buffer.from(scs, 'utf-8').toString('base64')
     };
 };
 exports.generateScsFile = generateScsFile;

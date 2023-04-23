@@ -1,0 +1,28 @@
+en: ostis-system Development Automation
+ru: автоматизации разработки ostis-систем
+
+parent: ostis_system_development
+
+max: |
+  ostis_system_development_automation
+
+children: |
+  personal_ostis_assistent_development_automation_tools
+  sc_agent_development_automation_tools
+
+concepts: |
+  ostis_system_developement_automation_tool
+  personal_ostis_assistent_development_automation_tool
+  sc_agent_development_automation_tool
+  ostis_system_development_operation
+  ostis_archops_tool
+  ostis_cicd_tool
+  ostis_cicd_pipeline
+  ostis_automation_action
+  scs_automation
+
+nrels: |
+  ostis_automation_next_step
+
+rrels: |
+  ostis_automation_entrypoint

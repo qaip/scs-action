@@ -32,8 +32,8 @@ export const getReplacements = (config: Config | Subconfig): Replacements => {
         '#DEFINITION_RU#': list('', toArray(config.definition.ru).join('\n')),
         '#DEFINITION_EN#': list('', toArray(config.definition.en).join('\n')),
         '#DEFINITION_CONCEPTS#': list('concept_', config.definition.using?.concepts),
-        '#DEFINITION_NRELS#': list('concept_', config.definition.using?.nrels),
-        '#DEFINITION_RRELS#': list('concept_', config.definition.using?.rrels),
+        '#DEFINITION_NRELS#': list('nrels_', config.definition.using?.nrels),
+        '#DEFINITION_RRELS#': list('rrels_', config.definition.using?.rrels),
         '#STATEMENT#': template =>
           config.statement
             ? statements
@@ -57,8 +57,8 @@ export const getReplacements = (config: Config | Subconfig): Replacements => {
         '#STATEMENT_TITLE_RU#': config.title.ru,
         '#STATEMENT_TITLE_EN#': config.title.en,
         '#STATEMENT_CONCEPTS#': list('concept_', config.using?.concepts),
-        '#STATEMENT_NRELS#': list('concept_', config.using?.nrels),
-        '#STATEMENT_RRELS#': list('concept_', config.using?.rrels)
+        '#STATEMENT_NRELS#': list('nrels_', config.using?.nrels),
+        '#STATEMENT_RRELS#': list('rrels_', config.using?.rrels)
       }
   }
 }

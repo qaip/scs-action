@@ -11,7 +11,8 @@ definition:
     - A knowledge base development tool
   using:
     concepts: |
-      tool
+      knowledge_base
+      development_tool
       scs_file
     nrels: |
       automation

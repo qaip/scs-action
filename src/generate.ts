@@ -5,7 +5,7 @@ import { Config, Subconfig } from './types'
 
 const TEMPLATES = new Map<Config['configType'], string>()
 
-export const generateScsFile = (config: Config, path: string, encode = true): { name: string; content: string } => {
+export const generateScsFile = (config: Config, path: string): { name: string; content: string } => {
   if (!TEMPLATES.has(config.configType)) {
     TEMPLATES.set(
       config.configType,
@@ -17,7 +17,7 @@ export const generateScsFile = (config: Config, path: string, encode = true): { 
   const scs = replace(template, config)
   return {
     name: `${path}${config.configType}_${config.system}.scs`,
-    content: encode ? Buffer.from(scs, 'utf-8').toString('base64') : scs
+    content: Buffer.from(scs, 'utf-8').toString('base64')
   }
 }
 

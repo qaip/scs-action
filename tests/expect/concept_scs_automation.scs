@@ -22,11 +22,12 @@ definition -> definition_of_scs_automation (*
 		[Def. (SCs Automation)] (* <- lang_en;; *);;
 
 	=> nrel_using_constants: {
-		concept_tool;
+		concept_knowledge_base;
+		concept_development_tool;
 		concept_scs_file;
 		...;
-		concept_automation;
-		concept_optimization
+		nrels_automation;
+		nrels_optimization
 	};;
 *);;
 
@@ -66,8 +67,8 @@ statement -> statement_of_scs_automation_and_code_style_problem (*
 
 	=> nrel_using_constants: {
 		concept_code_style_problem;
-		concept_solution;
-		concept_fake_relation
+		nrels_solution;
+		rrels_fake_relation
 	};;
 *);;
 
@@ -75,7 +76,8 @@ concept_ostis_devops => nrel_inclusion: concept_scs_automation;;
 
 sc_node_class ->
 	ostis_devops;
-	concept_tool;
+	concept_knowledge_base;
+	concept_development_tool;
 	concept_scs_file;
 	concepts_developer;
 	concepts_knowledge_base;
@@ -84,8 +86,8 @@ sc_node_class ->
 	concepts_code_style_problem;;
 
 sc_node_norole_relation ->
-	concept_automation;
-	concept_optimization;
+	nrels_automation;
+	nrels_optimization;
 	nrels_solution;;
 
 sc_node_role_relation ->
