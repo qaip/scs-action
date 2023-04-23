@@ -1,0 +1,65 @@
+{
+  "title": "SC Subject Domain",
+  "description": "Describe a subject domain of a concept as a part of knowledge base",
+  "type": "object",
+  "properties": {
+    "ru": {
+      "type": "string",
+      "pattern": "^([А-Яа-яA-Za-z](-[А-Яа-яA-Za-z])*)*( ([А-Яа-яA-Za-z](-[А-Яа-яA-Za-z])*)*)*$",
+      "title": "Russian idenfifier",
+      "description": "Russian idenfifier of the subject domain. Must be in the genitive case\n[ Предметная область ... ]",
+      "examples": ["название области в родительском падеже"]
+    },
+    "en": {
+      "type": "string",
+      "pattern": "^([A-Za-z](-[A-Za-z])*)*( ([A-Za-z](-[A-Za-z])*)*)*$",
+      "title": "English idenfifier",
+      "description": "English idenfifier of the subject domain\n[ Subject domain of ... ]",
+      "examples": ["domain name"]
+    },
+    "parent": {
+      "type": "string",
+      "pattern": "^[a-z]+(_[a-z]+)*$",
+      "description": "Parent subject domain of the describing subject domain",
+      "title": "Parent subject domain",
+      "examples": ["parent_subject_domain"]
+    },
+    "children": {
+      "type": "string",
+      "pattern": "^([a-z]+(_[a-z]+)*\\n)+$",
+      "title": "Child subject domains",
+      "description": "List of child subject domains of the describing subject domain",
+      "examples": ["|\n  "]
+    },
+    "max": {
+      "type": "string",
+      "pattern": "^([a-z]+(_[a-z]+)*\\n)+$",
+      "title": "Maximum classes of explored objects",
+      "description": "List of maximum classes of explored objects of the subject domain",
+      "examples": ["|\n  "]
+    },
+    "concepts": {
+      "type": "string",
+      "pattern": "^([a-z]+(_[a-z]+)*\\n)+$",
+      "title": "Non-maximum classes of explored objects",
+      "description": "List of non-maximum classes of explored objects of the subject domain",
+      "examples": ["|\n  "]
+    },
+    "rrels": {
+      "type": "string",
+      "pattern": "^([a-z]+(_[a-z]+)*\\n)+$",
+      "title": "Explored role relations",
+      "description": "List of explored role relations of the subject domain",
+      "examples": ["|\n  "]
+    },
+    "nrels": {
+      "type": "string",
+      "pattern": "^([a-z]+(_[a-z]+)*\\n)+$",
+      "title": "Explored norole relations",
+      "description": "List of explored norole relations of the subject domain",
+      "examples": ["|\n  "]
+    }
+  },
+  "required": ["ru", "en", "parent", "max", "concepts"],
+  "additionalProperties": false
+}
