@@ -14107,7 +14107,7 @@ exports.getPullRequestData = getPullRequestData;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.configTypes = void 0;
-exports.configTypes = ['concept', 'domain', 'nrel'];
+exports.configTypes = ['concept', 'domain'];
 
 
 /***/ }),
