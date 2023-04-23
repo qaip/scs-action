@@ -13911,8 +13911,8 @@ const getReplacements = (config) => {
                 '#DEFINITION_RU#': (0, generate_1.list)('', toArray(config.definition.ru).join('\n')),
                 '#DEFINITION_EN#': (0, generate_1.list)('', toArray(config.definition.en).join('\n')),
                 '#DEFINITION_CONCEPTS#': (0, generate_1.list)('concept_', (_a = config.definition.using) === null || _a === void 0 ? void 0 : _a.concepts),
-                '#DEFINITION_NRELS#': (0, generate_1.list)('concept_', (_b = config.definition.using) === null || _b === void 0 ? void 0 : _b.nrels),
-                '#DEFINITION_RRELS#': (0, generate_1.list)('concept_', (_c = config.definition.using) === null || _c === void 0 ? void 0 : _c.rrels),
+                '#DEFINITION_NRELS#': (0, generate_1.list)('nrels_', (_b = config.definition.using) === null || _b === void 0 ? void 0 : _b.nrels),
+                '#DEFINITION_RRELS#': (0, generate_1.list)('rrels_', (_c = config.definition.using) === null || _c === void 0 ? void 0 : _c.rrels),
                 '#STATEMENT#': template => config.statement
                     ? statements
                         .map(([system, variables]) => (0, generate_1.replace)(template, Object.assign({ configType: 'statement', system }, variables)))
@@ -13932,8 +13932,8 @@ const getReplacements = (config) => {
                 '#STATEMENT_TITLE_RU#': config.title.ru,
                 '#STATEMENT_TITLE_EN#': config.title.en,
                 '#STATEMENT_CONCEPTS#': (0, generate_1.list)('concept_', (_d = config.using) === null || _d === void 0 ? void 0 : _d.concepts),
-                '#STATEMENT_NRELS#': (0, generate_1.list)('concept_', (_e = config.using) === null || _e === void 0 ? void 0 : _e.nrels),
-                '#STATEMENT_RRELS#': (0, generate_1.list)('concept_', (_f = config.using) === null || _f === void 0 ? void 0 : _f.rrels)
+                '#STATEMENT_NRELS#': (0, generate_1.list)('nrels_', (_e = config.using) === null || _e === void 0 ? void 0 : _e.nrels),
+                '#STATEMENT_RRELS#': (0, generate_1.list)('rrels_', (_f = config.using) === null || _f === void 0 ? void 0 : _f.rrels)
             };
     }
 };
