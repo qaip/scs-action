@@ -13918,7 +13918,7 @@ const getReplacements = (config) => {
                         .map(([system, variables]) => (0, generate_1.replace)(template, Object.assign({ configType: 'statement', system }, variables)))
                         .join('\n')
                     : '',
-                '#STATEMENT_CONCEPTS_ALL#': (0, generate_1.list)('concepts_', statements.map(statement => statement[1].using.concepts).join('\n')),
+                '#STATEMENT_CONCEPTS_ALL#': (0, generate_1.list)('concept_', statements.map(statement => statement[1].using.concepts).join('\n')),
                 '#STATEMENT_NRELS_ALL#': (0, generate_1.list)('nrels_', statements.map(statement => statement[1].using.nrels).join('\n')),
                 '#STATEMENT_RRELS_ALL#': (0, generate_1.list)('rrels_', statements.map(statement => statement[1].using.rrels).join('\n'))
             };

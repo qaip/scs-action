@@ -41,7 +41,7 @@ export const getReplacements = (config: Config | Subconfig): Replacements => {
                 .join('\n')
             : '',
         '#STATEMENT_CONCEPTS_ALL#': list(
-          'concepts_',
+          'concept_',
           statements.map(statement => statement[1].using.concepts).join('\n')
         ),
         '#STATEMENT_NRELS_ALL#': list('nrels_', statements.map(statement => statement[1].using.nrels).join('\n')),
