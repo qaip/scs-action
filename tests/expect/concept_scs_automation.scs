@@ -79,11 +79,11 @@ sc_node_class ->
 	concept_knowledge_base;
 	concept_development_tool;
 	concept_scs_file;
-	concepts_developer;
-	concepts_knowledge_base;
-	concepts_duplicate;
-	concepts_boilerplate_code;
-	concepts_code_style_problem;;
+	concept_developer;
+	concept_knowledge_base;
+	concept_duplicate;
+	concept_boilerplate_code;
+	concept_code_style_problem;;
 
 sc_node_norole_relation ->
 	nrels_automation;
