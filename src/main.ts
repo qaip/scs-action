@@ -11,7 +11,7 @@ async function run(): Promise<void> {
   const octokit = github.getOctokit(githubToken)
   const payload = github.context.payload as PullRequestEvent
 
-  // Get the names of changed .sc.yaml files and the oid of the last commit
+  // Get the names of changed sc-yaml files and the oid of the last commit
   const { fileNames, commitOid } = await getPullRequestData(octokit, {
     ...github.context.repo,
     pullRequestNumber: payload.pull_request.number
