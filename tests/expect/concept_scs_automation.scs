@@ -12,7 +12,7 @@ definition -> definition_of_scs_automation (*
 	-> rrel_key_sc_element: concept_scs_automation;;
 
 	<= nrel_sc_text_translation: ... (*
-		-> [Инструмент автоматизации и оптимизации создания scs-файлов с использованием GitHub Actions - Инструмент разработки базы знаний] (* <- lang_ru;; *);;
+		-> [Инструмент автоматизации и оптимизации создания scs-файлов с использованием GitHub Actions, а также инструмент разработки базы знаний] (* <- lang_ru;; *);;
 		-> [A tool for automation and optimization scs files creation using GitHub Actions] (* <- lang_en;; *);;
 		-> [A knowledge base development tool] (* <- lang_en;; *);;
 	*);;

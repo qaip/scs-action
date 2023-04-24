@@ -4,7 +4,7 @@ en: SCs Automation | scs-automation | scs action
 definition:
   ru:
     Инструмент автоматизации и оптимизации создания scs-файлов с использованием
-    GitHub Actions - Инструмент разработки базы знаний
+    GitHub Actions, а также инструмент разработки базы знаний
   en:
     - A tool for automation and optimization scs files creation using GitHub
       Actions
