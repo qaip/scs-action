@@ -46,10 +46,10 @@ definition -> definition_of_#SYSTEM# (*
 + 	};;
 + *);;
 
-concept_#MAX# => nrel_inclusion: concept_#SYSTEM#;;
+concept_#PARENT# => nrel_inclusion: concept_#SYSTEM#;;
 
 sc_node_class ->
-	#MAX#;
+	#PARENT#;
 	#DEFINITION_CONCEPTS#;
 	#STATEMENT_CONCEPTS_ALL#;;
 
