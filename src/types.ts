@@ -32,7 +32,7 @@ interface NeighbourhoodConfig extends Identifiers {
 
 interface ConceptConfig extends NeighbourhoodConfig {
   configType: 'concept'
-  max: string
+  parent?: string
 }
 
 interface NrelConfig extends NeighbourhoodConfig {

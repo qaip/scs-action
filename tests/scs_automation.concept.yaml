@@ -50,4 +50,4 @@ statement:
       rrels: |
         fake_relation
 
-max: ostis_devops
+parent: ostis_system_development_automation

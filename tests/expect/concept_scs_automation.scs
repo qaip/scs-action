@@ -72,10 +72,10 @@ statement -> statement_of_scs_automation_and_code_style_problem (*
 	};;
 *);;
 
-concept_ostis_devops => nrel_inclusion: concept_scs_automation;;
+concept_ostis_system_development_automation => nrel_inclusion: concept_scs_automation;;
 
 sc_node_class ->
-	ostis_devops;
+	ostis_system_development_automation;
 	concept_knowledge_base;
 	concept_development_tool;
 	concept_scs_file;

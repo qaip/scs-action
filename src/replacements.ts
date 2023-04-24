@@ -47,7 +47,7 @@ export const getReplacements = (config: Config | Subconfig): Replacements => {
         '#STATEMENT_NRELS_ALL#': list('nrels_', statements.map(statement => statement[1].using?.nrels).join('\n')),
         '#STATEMENT_RRELS_ALL#': list('rrels_', statements.map(statement => statement[1].using?.rrels).join('\n'))
       }
-      return config.configType === 'concept' ? { ...nbhd, '#MAX#': config.max } : { ...nbhd }
+      return config.configType === 'concept' ? { ...nbhd, '#PARENT#': config.parent ?? '...' } : { ...nbhd }
     }
     case 'statement':
       return {
