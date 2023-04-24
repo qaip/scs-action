@@ -13833,7 +13833,7 @@ function run() {
         const githubToken = core.getInput('github_token');
         const octokit = github.getOctokit(githubToken);
         const payload = github.context.payload;
-        // Get the names of changed .sc.yaml files and the oid of the last commit
+        // Get the names of changed sc-yaml files and the oid of the last commit
         const { fileNames, commitOid } = yield (0, requests_1.getPullRequestData)(octokit, Object.assign(Object.assign({}, github.context.repo), { pullRequestNumber: payload.pull_request.number }));
         // Exit if no files are changed
         if (!fileNames.length) {
