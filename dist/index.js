@@ -13881,7 +13881,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getReplacements = void 0;
 const generate_1 = __nccwpck_require__(1324);
 const getReplacements = (config) => {
-    var _a, _b, _c, _d, _e, _f;
+    var _a;
     const toArray = (value) => (typeof value === 'string' ? value.split(' | ') : value);
     switch (config.configType) {
         case 'domain': {
@@ -13910,19 +13910,19 @@ const getReplacements = (config) => {
                 '#EN_ALT#': (0, generate_1.list)('', toArray(config.en).slice(1).join('\n'), true),
                 '#DEFINITION_RU#': (0, generate_1.list)('', toArray(config.definition.ru).join('\n')),
                 '#DEFINITION_EN#': (0, generate_1.list)('', toArray(config.definition.en).join('\n')),
-                '#DEFINITION_CONCEPTS#': (0, generate_1.list)('concept_', (_a = config.definition.using) === null || _a === void 0 ? void 0 : _a.concepts),
-                '#DEFINITION_NRELS#': (0, generate_1.list)('nrels_', (_b = config.definition.using) === null || _b === void 0 ? void 0 : _b.nrels),
-                '#DEFINITION_RRELS#': (0, generate_1.list)('rrels_', (_c = config.definition.using) === null || _c === void 0 ? void 0 : _c.rrels),
+                '#DEFINITION_CONCEPTS#': (0, generate_1.list)('concept_', config.definition.using.concepts),
+                '#DEFINITION_NRELS#': (0, generate_1.list)('nrels_', config.definition.using.nrels),
+                '#DEFINITION_RRELS#': (0, generate_1.list)('rrels_', config.definition.using.rrels),
                 '#STATEMENT#': template => config.statement
                     ? statements
                         .map(([system, variables]) => (0, generate_1.replace)(template, Object.assign({ configType: 'statement', system }, variables)))
                         .join('\n')
                     : '',
-                '#STATEMENT_CONCEPTS_ALL#': (0, generate_1.list)('concepts_', statements.map(statement => { var _a; return (_a = statement[1].using) === null || _a === void 0 ? void 0 : _a.concepts; }).join('\n')),
-                '#STATEMENT_NRELS_ALL#': (0, generate_1.list)('nrels_', statements.map(statement => { var _a; return (_a = statement[1].using) === null || _a === void 0 ? void 0 : _a.nrels; }).join('\n')),
-                '#STATEMENT_RRELS_ALL#': (0, generate_1.list)('rrels_', statements.map(statement => { var _a; return (_a = statement[1].using) === null || _a === void 0 ? void 0 : _a.rrels; }).join('\n'))
+                '#STATEMENT_CONCEPTS_ALL#': (0, generate_1.list)('concepts_', statements.map(statement => statement[1].using.concepts).join('\n')),
+                '#STATEMENT_NRELS_ALL#': (0, generate_1.list)('nrels_', statements.map(statement => statement[1].using.nrels).join('\n')),
+                '#STATEMENT_RRELS_ALL#': (0, generate_1.list)('rrels_', statements.map(statement => statement[1].using.rrels).join('\n'))
             };
-            return config.configType === 'concept' ? Object.assign(Object.assign({}, nbhd), { '#MAX#': config.max }) : Object.assign({}, nbhd);
+            return config.configType === 'concept' ? Object.assign(Object.assign({}, nbhd), { '#PARENT#': (_a = config.parent) !== null && _a !== void 0 ? _a : '...' }) : Object.assign({}, nbhd);
         }
         case 'statement':
             return {
@@ -13931,9 +13931,9 @@ const getReplacements = (config) => {
                 '#STATEMENT_EN#': (0, generate_1.list)('', toArray(config.en).join('\n')),
                 '#STATEMENT_TITLE_RU#': config.title.ru,
                 '#STATEMENT_TITLE_EN#': config.title.en,
-                '#STATEMENT_CONCEPTS#': (0, generate_1.list)('concept_', (_d = config.using) === null || _d === void 0 ? void 0 : _d.concepts),
-                '#STATEMENT_NRELS#': (0, generate_1.list)('nrels_', (_e = config.using) === null || _e === void 0 ? void 0 : _e.nrels),
-                '#STATEMENT_RRELS#': (0, generate_1.list)('rrels_', (_f = config.using) === null || _f === void 0 ? void 0 : _f.rrels)
+                '#STATEMENT_CONCEPTS#': (0, generate_1.list)('concept_', config.using.concepts),
+                '#STATEMENT_NRELS#': (0, generate_1.list)('nrels_', config.using.nrels),
+                '#STATEMENT_RRELS#': (0, generate_1.list)('rrels_', config.using.rrels)
             };
     }
 };
