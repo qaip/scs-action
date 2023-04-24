@@ -23,7 +23,7 @@ interface DomainConfig extends Identifiers<string>, Nodes {
 interface NeighbourhoodConfig extends Identifiers {
   system: string
   definition: Identifiers & {
-    using?: Nodes
+    using: Nodes
   }
   statement?: {
     [system: string]: Omit<StatementConfig, 'configType' | 'system'>
@@ -50,7 +50,7 @@ interface StatementConfig extends Identifiers {
   configType: 'statement'
   system: string
   title: Identifiers<string>
-  using?: Nodes
+  using: Nodes
 }
 
 export const configTypes: Config['configType'][] = ['concept', 'domain']
