@@ -132,6 +132,20 @@ statement:
 [**Output**](tests/expect/concept_scs_automation.scs)
 
 
+## Schemas
+### VSCode
+1. Make sure you have [YAML](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) extension installed.
+2. Go to vscode settings, search for `yaml.schemas`, click "Edit in settings.json" and paste the following lines:
+```json
+"yaml.schemas": {
+  "https://raw.githubusercontent.com/qaip/scs-action/v3/schemas/concept.schema.json": "*.concept.yaml",
+  "https://raw.githubusercontent.com/qaip/scs-action/v3/schemas/domain.schema.json": "*.domain.yaml"
+}
+```
+
+### PyCharm
+1. Go to `Settings` > `Languages & Frameworks` > `Schemas and DTDs` > `JSON Schema Mappings`.
+2. Set up the same mappings as for vscode (see above).
 
 ## Contributing
 - Feel free to open issues and request new templates and features.
