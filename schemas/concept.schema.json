@@ -1,0 +1,130 @@
+{
+  "title": "Concept",
+  "description": "SCs Automation",
+  "type": "object",
+  "properties": {
+    "ru": {
+      "$ref": "./base.schema.json#/$defs/ru-set+array",
+      "title": "Russian identifiers",
+      "description": "Set or array of russian names (identifiers) of the concept",
+      "default": "название | синоним"
+    },
+    "en": {
+      "$ref": "./base.schema.json#/$defs/en-set+array",
+      "title": "English identifiers",
+      "description": "Set or array of english names (identifiers) of the concept",
+      "default": "name | synonym"
+    },
+    "definition": {
+      "title": "Definition",
+      "description": "Definition of the concept",
+      "type": "object",
+      "properties": {
+        "ru": {
+          "$ref": "./base.schema.json#/$defs/ru-text+array",
+          "title": "Russian definition text",
+          "description": "Set or array of russian definitions of the concept",
+          "default": "Текст определения"
+        },
+        "en": {
+          "$ref": "./base.schema.json#/$defs/en-text+array",
+          "title": "English definition text",
+          "description": "Set or array of english definitions of the concept",
+          "default": "Definition text"
+        },
+        "using": {
+          "$ref": "./base.schema.json#/$defs/nodes",
+          "title": "Used concepts and relations",
+          "description": "Lists of concepts and role/norole relations used in the concept definition"
+        }
+      },
+      "required": ["ru", "en", "using"],
+      "additionalProperties": false,
+      "examples": [
+        {
+          "ru": "Текст определения",
+          "en": "Definition text",
+          "using": {
+            "concepts": "|\n      used_concept",
+            "nrels": "|\n      used_nrel",
+            "rrels": "|\n      used_rrel"
+          }
+        }
+      ]
+    },
+    "statement": {
+      "title": "Statements",
+      "description": "Statements about the concept, represented as a key-value object, where key is the system identifier of the statement",
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]+(_[a-z]+)*$": {
+          "type": "object",
+          "properties": {
+            "ru": {
+              "$ref": "./base.schema.json#/$defs/ru-text+array",
+              "title": "Russian statement",
+              "description": "Russian statement text"
+            },
+            "en": {
+              "$ref": "./base.schema.json#/$defs/en-text+array",
+              "title": "English statement",
+              "description": "English statement text"
+            },
+            "title": {
+              "title": "Statement title",
+              "description": "Statement title describing what the statement is about",
+              "type": "object",
+              "properties": {
+                "ru": {
+                  "$ref": "./base.schema.json#/$defs/ru",
+                  "title": "Russian statement title",
+                  "description": "Russian statement title describing what the statement is about"
+                },
+                "en": {
+                  "$ref": "./base.schema.json#/$defs/en",
+                  "title": "English statement title",
+                  "description": "English statement title describing what the statement is about"
+                }
+              },
+              "required": ["ru", "en"],
+              "additionalProperties": false
+            },
+            "using": {
+              "$ref": "./base.schema.json#/$defs/nodes",
+              "title": "Used concepts and relations",
+              "description": "Lists of concepts and role/norole relations used in the concept statement"
+            }
+          },
+          "required": ["ru", "en", "title", "using"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "examples": [
+        {
+          "statement_title": {
+            "title": {
+              "ru": "Название высказывания",
+              "en": "Statement title"
+            },
+            "ru": "Текст высказывания",
+            "en": "Statement text",
+            "using": {
+              "concepts": "|\n        used_concept",
+              "nrels": "|\n        used_nrel",
+              "rrels": "|\n        used_rrel"
+            }
+          }
+        }
+      ]
+    },
+    "parent": {
+      "$ref": "./base.schema.json#/$defs/system",
+      "title": "Parent class",
+      "description": "Superclass of the concept, the class the concept is included in",
+      "examples": ["superclass"]
+    }
+  },
+  "required": ["ru", "en", "definition"],
+  "additionalProperties": false
+}
