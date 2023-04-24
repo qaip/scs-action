@@ -1,0 +1,113 @@
+{
+  "$defs": {
+    "system-list": {
+      "type": "string",
+      "pattern": "^([a-z]+(_[a-z]+)*\\n)+$"
+    },
+    "system": {
+      "type": "string",
+      "pattern": "^[a-z]+(_[a-z]+)*$"
+    },
+    "ru": {
+      "type": "string",
+      "pattern": "^([А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*)( [А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*)*$",
+      "examples": ["название"]
+    },
+    "en": {
+      "type": "string",
+      "pattern": "^([A-Za-z]+(-[A-Za-z]+)*)( [A-Za-z]+(-[A-Za-z]+)*)*$",
+      "examples": ["name"]
+    },
+    "ru-text": {
+      "type": "string",
+      "pattern": "^([А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*)((\\.|,|;)? [А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*)*$",
+      "examples": ["текст"]
+    },
+    "en-text": {
+      "type": "string",
+      "pattern": "^([A-Za-z]+(-[A-Za-z]+)*)((\\.|,|;)? [A-Za-z]+(-[A-Za-z]+)*)*$",
+      "examples": ["text"]
+    },
+    "ru-set": {
+      "type": "string",
+      "pattern": "^(([А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*)( [А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*)*)( \\| ([А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*)( [А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*)*)*$",
+      "examples": ["название | синоним"]
+    },
+    "en-set": {
+      "type": "string",
+      "pattern": "^(([A-Za-z]+(-[A-Za-z]+)*)( [A-Za-z]+(-[A-Za-z]+)*)*)( \\| ([A-Za-z]+(-[A-Za-z]+)*)( [A-Za-z]+(-[A-Za-z]+)*)*)*$",
+      "examples": ["name | synonym"]
+    },
+    "ru-array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ru"
+      },
+      "examples": [["название", "синоним"]]
+    },
+    "en-array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ru"
+      },
+      "examples": [["name", "synonym"]]
+    },
+    "ru-text-array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ru-text"
+      },
+      "examples": [["текст", "текст"]]
+    },
+    "en-text-array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ru-text"
+      },
+      "examples": [["text", "text"]]
+    },
+    "ru-set+array": {
+      "oneOf": [{ "$ref": "#/$defs/ru-set" }, { "$ref": "#/$defs/ru-array" }]
+    },
+    "en-set+array": {
+      "oneOf": [{ "$ref": "#/$defs/en-set" }, { "$ref": "#/$defs/en-array" }]
+    },
+    "ru-text+array": {
+      "oneOf": [{ "$ref": "#/$defs/ru-text" }, { "$ref": "#/$defs/ru-text-array", "minItems": 2 }]
+    },
+    "en-text+array": {
+      "oneOf": [{ "$ref": "#/$defs/en-text" }, { "$ref": "#/$defs/en-text-array", "minItems": 2 }]
+    },
+    "nodes": {
+      "type": "object",
+      "properties": {
+        "concepts": {
+          "type": "string",
+          "$ref": "#/$defs/system-list",
+          "title": "List of concepts",
+          "description": "List of concepts"
+        },
+        "nrels": {
+          "type": "string",
+          "$ref": "#/$defs/system-list",
+          "title": "List of norole relations",
+          "description": "List of norole relations"
+        },
+        "rrels": {
+          "type": "string",
+          "$ref": "#/$defs/system-list",
+          "title": "List of role relations",
+          "description": "List of role relations"
+        }
+      },
+      "additionalProperties": false,
+      "examples": [
+        {
+          "concepts": "|\n    used_concept",
+          "nrels": "|\n    used_nrel",
+          "rrels": "|\n    used_rrel"
+        }
+      ]
+    }
+  }
+}

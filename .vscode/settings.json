@@ -1,6 +1,7 @@
 {
   "yaml.schemas": {
     "https://unpkg.com/graphql-config/config-schema.json": "graphqlrc.yml",
+    "schemas/concept.schema.json": "*.concept.yaml",
     "schemas/domain.schema.json": "*.domain.yaml"
   }
 }
