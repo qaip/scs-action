@@ -14,6 +14,9 @@ Many of the scs files actually contain quite a lot of boilerplate code with many
 - Focus on what you need, do not get distracted by complex syntax and semantics.
 - Get neat and uniformly formatted ready-to-use scs files generated on the fly.
 
+Starting `v3.2` we have introduced [strongly typed schemas](#schemas) for interactive highlights and annotations, code snippets, autocompletion and extremely strict validation! This further enhances the benefits offered by this project, as it:
+  - Significantly improves the developer experience
+  - Eliminates the possibility of any syntax or language error during the build process
 
 ## Usage
 ### Minimal example
@@ -27,28 +30,43 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: qaip/scs-action@v2
+      - uses: qaip/scs-action@v3
 ```
-Now whenever `.sc.yaml` files are pushed or changed within a pull request, the corresponding `.scs` files will be generated or updated accordingly.
+Now whenever configuration `.yaml` files are pushed or changed within a pull request, the corresponding `.scs` files will be generated or updated accordingly.
 
-### About sc.yaml files
-Source files describing fragments of a knowledge base must have the `sc.yaml` or `sc.yml` extension. The key field defining the template type is called `type`. All other fields are defined based on the specified template type.
+### About configuration yaml files
+Source files describing fragments of a knowledge base must have the `<type>.yaml` or `<type>.yml` extension, where `<type>` defines the type of the knowledge base fragment. See [tempaltes](#tempaltes) for more information about available types.
 
-Single line string (called `string`):
-```yaml
-en: English Main Idtf
-``` 
-Multiline string (called `list`):
-```yaml
-en: |
-  English Main Idtf
-  English Idtf
-```
+The name of the configuration file is used as a part of the main system identifier of the knowledge base fragment.
 
+Each configuration file type has a different set of fields defining the knowledge base fragment, however, there are certain common value types that are used among all configuration files and are also mentioned in annotations:
+
+- Pipe-separated string (called `Set`):
+
+  ```yaml
+  en: First | Second | Third
+  ```
+
+- Multiline string (called `List`):
+
+  ```yaml
+  en: |
+    First
+    Second
+    Third
+  ```
+
+- Collection (called `Array`):
+  ```yaml
+  en:
+    - First
+    - Second
+    - Third
+  ```
 
 
 ### Additional options
-There are several options available for scs-action:
+There are several additional options available for scs-action:
 - `github_token` — custom GitHub token (by default `github.token` is used).
 - `ignore_empty` — whether to ignore empty files (either `never` or `always`, default is `never`).
 
@@ -62,25 +80,57 @@ Example:
 
 
 ## Templates
-The currently supported templates are described below. If you need a new template, leave the corresponding request by creating an issue (see [contributing](#contributing)).
+The currently supported knowledge base fragment types (called templates) are described below. If you need a new template, please leave the corresponding request by creating an issue (see [contributing](#contributing)).
 
 ### Subject Domain
-```ts
-type: 'domain'
-system: string
-en: string
-ru: string
-parent: string
-children: list // optional
-max: list
-concepts: list
-rrels: list // optional
-nrels: list // optional
+Matching extension: `.domain.yaml`
+```rb
+en: String
+ru: String
+parent: String
+children: List # optional
+max: List
+concepts: List # optional
+rrels: List # optional
+nrels: List # optional
+```
+**Example**:
+[**Input**](tests/ostis_automation.domain.yaml)
+->
+[**Output**](tests/expect/domain_ostis_automation.scs)
+
+
+### Semantic Neighbourhood of Concept
+Matching extension: `.concept.yaml`
+```rb
+ru: Set | Array
+en: Set | Array
+definition:
+  ru: String | Array
+  en: String | Array
+  using:
+    concepts: List # optional
+    nrels: List # optional
+    rrels: List # optional
+statement: 
+  one:
+    title:
+      ru: String
+      en: String
+    ru: String | Array
+    en: String | Array
+    using:
+      concepts: List # optional
+      nrels: List # optional
+      rrels: List # optional
+  two:
+    ...
 ```
 **Example:** 
-[**Input**](https://github.com/qaip/gt/blob/main/Graphs/Simple%20Graphs/simple_graphs.sc.yaml)
+[**Input**](tests/scs_automation.concept.yaml)
 ->
-[**Output**](https://github.com/qaip/gt/blob/main/Graphs/Simple%20Graphs/domain_simple_graphs.scs)
+[**Output**](tests/expect/concept_scs_automation.scs)
+
 
 
 ## Contributing
