@@ -38,21 +38,19 @@ export const replace = (template: string, config: Config | Subconfig): string =>
   }
   return template
     .replace(/^\+ \/\* (#\w+#) \*\/\n((\+ [^\n]*\n)+)/gms, blockReplacer)
-    .replace(/^- (.+)(#\w+#)(.+)/gm, lineReplacer)
+    .replace(/^- (.*)(#\w+#)(.*)\n/gm, lineReplacer)
     .replace(/(\t*)(#\w+#)/gm, replacer)
+    .replace(/(^\n(\? .*\n)+(- .*\n)?($|\*))|(^\? )/gm, '$4')
 }
 
 export const list =
-  (pre: string, values: string | undefined, semi = false) =>
+  (values: string | undefined) =>
   (prefix: string, postfix = ''): string => {
-    if (semi) {
-      postfix = postfix.replace(/;$/, '')
-    }
     return values && values.trim()
-      ? values
+      ? `${values
           .split('\n')
           .filter(Boolean)
-          .map(value => prefix + pre + value + postfix)
-          .join(`${postfix ? '' : ';'}\n`) + (semi ? ';' : '')
-      : `${prefix}...${postfix}`
+          .map(value => prefix + value + postfix)
+          .join(`${postfix ? '' : ';'}\n`)}\n`
+      : ''
   }
