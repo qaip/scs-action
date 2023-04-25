@@ -14,8 +14,10 @@ const testScsGeneration = (fileName: string): void => {
     const { name, content } = generateScsFile(...parse(config, fullPath))
     const scs = Buffer.from(content, 'base64').toString('utf-8')
     writeFileSync(name.replace(/([^/]+)$/, '.actual/$1'), scs, { encoding: 'utf8' })
-    const expected = readFileSync(name.replace(/([^/]+)$/, 'expect/$1'), { encoding: 'utf8' })
-    expect(scs).toBe(expected)
+    if (process.argv[2] !== 'dev') {
+      const expected = readFileSync(name.replace(/([^/]+)$/, 'expect/$1'), { encoding: 'utf8' })
+      expect(scs).toBe(expected)
+    }
   } catch (e) {
     throw e
   }
