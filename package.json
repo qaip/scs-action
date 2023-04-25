@@ -31,6 +31,7 @@
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
     "@octokit/webhooks-definitions": "^3.67.3",
+    "ajv": "^8.12.0",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {

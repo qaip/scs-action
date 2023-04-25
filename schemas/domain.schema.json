@@ -4,43 +4,43 @@
   "type": "object",
   "properties": {
     "ru": {
-      "$ref": "./base.schema.json#/$defs/ru",
+      "$ref": "base.schema.json#/$defs/ru",
       "description": "Russian idenfifier of the subject domain. Must be in the genitive case\n[ Предметная область ... ]",
       "examples": ["название области в родительском падеже"]
     },
     "en": {
-      "$ref": "./base.schema.json#/$defs/en",
+      "$ref": "base.schema.json#/$defs/en",
       "description": "English idenfifier of the subject domain\n[ Subject domain of ... ]",
       "examples": ["domain name"]
     },
     "parent": {
-      "$ref": "./base.schema.json#/$defs/system",
+      "$ref": "base.schema.json#/$defs/system",
       "description": "Parent subject domain of the describing subject domain",
       "title": "Parent subject domain",
       "examples": ["parent_subject_domain"]
     },
     "children": {
-      "$ref": "./base.schema.json#/$defs/system-list",
+      "$ref": "base.schema.json#/$defs/system-list",
       "title": "Child subject domains",
       "description": "List of child subject domains of the describing subject domain"
     },
     "max": {
-      "$ref": "./base.schema.json#/$defs/system-list",
+      "$ref": "base.schema.json#/$defs/system-list",
       "title": "Maximum classes of explored objects",
       "description": "List of maximum classes of explored objects of the subject domain"
     },
     "concepts": {
-      "$ref": "./base.schema.json#/$defs/system-list",
+      "$ref": "base.schema.json#/$defs/system-list",
       "title": "Non-maximum classes of explored objects",
       "description": "List of non-maximum classes of explored objects of the subject domain"
     },
     "rrels": {
-      "$ref": "./base.schema.json#/$defs/system-list",
+      "$ref": "base.schema.json#/$defs/system-list",
       "title": "Explored role relations",
       "description": "List of explored role relations of the subject domain"
     },
     "nrels": {
-      "$ref": "./base.schema.json#/$defs/system-list",
+      "$ref": "base.schema.json#/$defs/system-list",
       "title": "Explored norole relations",
       "description": "List of explored norole relations of the subject domain"
     }

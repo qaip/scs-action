@@ -4,13 +4,13 @@
   "type": "object",
   "properties": {
     "ru": {
-      "$ref": "./base.schema.json#/$defs/ru-set+array",
+      "$ref": "base.schema.json#/$defs/ru-set+array",
       "title": "Russian identifiers",
       "description": "Set or array of russian names (identifiers) of the concept",
       "default": "название | синоним"
     },
     "en": {
-      "$ref": "./base.schema.json#/$defs/en-set+array",
+      "$ref": "base.schema.json#/$defs/en-set+array",
       "title": "English identifiers",
       "description": "Set or array of english names (identifiers) of the concept",
       "default": "name | synonym"
@@ -21,19 +21,19 @@
       "type": "object",
       "properties": {
         "ru": {
-          "$ref": "./base.schema.json#/$defs/ru-text+array",
+          "$ref": "base.schema.json#/$defs/ru-text+array",
           "title": "Russian definition text",
           "description": "Set or array of russian definitions of the concept",
           "default": "Текст определения"
         },
         "en": {
-          "$ref": "./base.schema.json#/$defs/en-text+array",
+          "$ref": "base.schema.json#/$defs/en-text+array",
           "title": "English definition text",
           "description": "Set or array of english definitions of the concept",
           "default": "Definition text"
         },
         "using": {
-          "$ref": "./base.schema.json#/$defs/nodes",
+          "$ref": "base.schema.json#/$defs/nodes",
           "title": "Used concepts and relations",
           "description": "Lists of concepts and role/norole relations used in the concept definition"
         }
@@ -61,12 +61,12 @@
           "type": "object",
           "properties": {
             "ru": {
-              "$ref": "./base.schema.json#/$defs/ru-text+array",
+              "$ref": "base.schema.json#/$defs/ru-text+array",
               "title": "Russian statement",
               "description": "Russian statement text"
             },
             "en": {
-              "$ref": "./base.schema.json#/$defs/en-text+array",
+              "$ref": "base.schema.json#/$defs/en-text+array",
               "title": "English statement",
               "description": "English statement text"
             },
@@ -76,12 +76,12 @@
               "type": "object",
               "properties": {
                 "ru": {
-                  "$ref": "./base.schema.json#/$defs/ru",
+                  "$ref": "base.schema.json#/$defs/ru",
                   "title": "Russian statement title",
                   "description": "Russian statement title describing what the statement is about"
                 },
                 "en": {
-                  "$ref": "./base.schema.json#/$defs/en",
+                  "$ref": "base.schema.json#/$defs/en",
                   "title": "English statement title",
                   "description": "English statement title describing what the statement is about"
                 }
@@ -90,7 +90,7 @@
               "additionalProperties": false
             },
             "using": {
-              "$ref": "./base.schema.json#/$defs/nodes",
+              "$ref": "base.schema.json#/$defs/nodes",
               "title": "Used concepts and relations",
               "description": "Lists of concepts and role/norole relations used in the concept statement"
             }
@@ -119,7 +119,7 @@
       ]
     },
     "parent": {
-      "$ref": "./base.schema.json#/$defs/system",
+      "$ref": "base.schema.json#/$defs/system",
       "title": "Parent class",
       "description": "Superclass of the concept, the class the concept is included in",
       "examples": ["superclass"]
