@@ -69,12 +69,15 @@ Each configuration file type has a different set of fields defining the knowledg
 There are several additional options available for scs-action:
 - `github_token` — custom GitHub token (by default `github.token` is used).
 - `ignore_empty` — whether to ignore empty files (either `never` or `always`, default is `never`).
+- `ignore_invalid` — whether to ignore invalid files (either `never` or `always`, default is `never`).\
+  When set to `always`, if an error in a configuration file occurs, the action will log the error, skip the file, and continue its job.
 
 Example:
 ```yaml
 - uses: qaip/scs-action@v2
   with:
     ignore_empty: always
+    ignore_invalid: always
 ```
 
 

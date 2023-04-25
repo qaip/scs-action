@@ -73,10 +73,10 @@
       "oneOf": [{ "$ref": "#/$defs/en-set" }, { "$ref": "#/$defs/en-array" }]
     },
     "ru-text+array": {
-      "oneOf": [{ "$ref": "#/$defs/ru-text" }, { "$ref": "#/$defs/ru-text-array", "minItems": 2 }]
+      "oneOf": [{ "$ref": "#/$defs/ru-text" }, { "$ref": "#/$defs/ru-text-array", "type": "array", "minItems": 2 }]
     },
     "en-text+array": {
-      "oneOf": [{ "$ref": "#/$defs/en-text" }, { "$ref": "#/$defs/en-text-array", "minItems": 2 }]
+      "oneOf": [{ "$ref": "#/$defs/en-text" }, { "$ref": "#/$defs/en-text-array", "type": "array", "minItems": 2 }]
     },
     "nodes": {
       "type": "object",

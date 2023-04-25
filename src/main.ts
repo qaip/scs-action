@@ -38,7 +38,25 @@ async function run(): Promise<void> {
   }
 
   // Generate scs files
-  const files = filesContent.map((content, index) => generateScsFile(...parse(content, fileNames[index])))
+  const ignoreInvalid = core.getInput('ignore_invalid')
+  const nonNullable = <T>(value: T): value is NonNullable<T> => value !== undefined
+  const files = filesContent
+    .map((content, index) => {
+      try {
+        return generateScsFile(...parse(content, fileNames[index]))
+      } catch (e) {
+        if (e instanceof Error) {
+          core.error(e.message)
+          if (ignoreInvalid === 'always') {
+            return undefined
+          }
+          process.exit(1)
+        } else {
+          throw e
+        }
+      }
+    })
+    .filter(nonNullable)
 
   // Commit and push generated scs files
   const commitUrl = await commitFiles(

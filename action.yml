@@ -14,6 +14,10 @@ inputs:
     description: Ignore empty files [never|always].
     required: false
     default: never
+  ignore_invalid:
+    description: Ignore invalid files [never|always].
+    required: false
+    default: never
 
 runs:
   using: node16
