@@ -21404,7 +21404,7 @@ const getPullRequestData = (octokit, variables) => __awaiter(void 0, void 0, voi
     const { repository } = yield octokit.graphql(query, variables);
     const fileNames = repository.pullRequest.files.nodes
         .map(node => node.path)
-        .filter(path => new RegExp(`^.+\\.(${types_1.configTypes.join('|')})\\.ya?ml$`).test(path));
+        .filter(path => new RegExp(`^.+\\.(${types_1.configTypes.join('|')})\\.yaml$`).test(path));
     const commitOid = (_a = repository.pullRequest.headRef.target.history.nodes.at(0)) === null || _a === void 0 ? void 0 : _a.oid;
     if (!commitOid) {
         throw new Error('Commit Oid is not found');
@@ -21440,7 +21440,7 @@ const validators_1 = __nccwpck_require__(9783);
 const parse = (text, fileName) => {
     const config = (0, js_yaml_1.load)(text);
     if (isConfigLike(config)) {
-        const [, path, system, configType] = fileName.match(/^(.+\/)?(.+)\.(.+)\.ya?ml$/);
+        const [, path, system, configType] = fileName.match(/^(.+\/)?(.+)\.(.+)\.yaml$/);
         const validate = validators_1.ajv.getSchema(`${configType}.schema.json`);
         if (!validate) {
             throw new Error('Invalid config type');
