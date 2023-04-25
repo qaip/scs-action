@@ -28,7 +28,8 @@ export const replace = (template: string, config: Config | Subconfig): string =>
     const subtemplate = block.replace(/^\+ /gm, '')
     return typeof replacement === 'function' ? replacement(subtemplate) : replacement
   }
-  const lineReplacer = (_match: string, prefix: string, variable: `#${string}#`, postfix: string): string => {
+  const lineReplacer = (match: string, prefix: string, variable: `#${string}#`, postfix: string): string => {
+    if (variable === '#END#') return match
     const replacement = replacements[variable] ?? variable
     return typeof replacement === 'function' ? replacement(prefix, postfix) : replacement
   }
@@ -41,6 +42,7 @@ export const replace = (template: string, config: Config | Subconfig): string =>
     .replace(/^- (.*)(#\w+#)(.*)\n/gm, lineReplacer)
     .replace(/(\t*)(#\w+#)/gm, replacer)
     .replace(/(^\n(\? .*\n)+(- .*\n)?($|\*))|(^\? )/gm, '$4')
+    .replace(/;*\n*- \t*#END#/g, '')
 }
 
 export const list =
