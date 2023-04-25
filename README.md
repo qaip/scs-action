@@ -30,7 +30,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: qaip/scs-action@v3
+      - uses: qaip/scs-action@v4
 ```
 Now whenever configuration `.yaml` files are pushed or changed within a pull request, the corresponding `.scs` files will be generated or updated accordingly.
 
@@ -141,8 +141,8 @@ statement:
 2. Go to vscode settings, search for `yaml.schemas`, click "Edit in settings.json" and paste the following lines:
 ```json
 "yaml.schemas": {
-  "https://raw.githubusercontent.com/qaip/scs-action/v3/schemas/concept.schema.json": "*.concept.yaml",
-  "https://raw.githubusercontent.com/qaip/scs-action/v3/schemas/domain.schema.json": "*.domain.yaml"
+  "https://raw.githubusercontent.com/qaip/scs-action/v4/schemas/concept.schema.json": "*.concept.yaml",
+  "https://raw.githubusercontent.com/qaip/scs-action/v4/schemas/domain.schema.json": "*.domain.yaml"
 }
 ```
 
