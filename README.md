@@ -35,7 +35,7 @@ jobs:
 Now whenever configuration `.yaml` files are pushed or changed within a pull request, the corresponding `.scs` files will be generated or updated accordingly.
 
 ### About configuration yaml files
-Source files describing fragments of a knowledge base must have the `<type>.yaml` or `<type>.yml` extension, where `<type>` defines the type of the knowledge base fragment. See [tempaltes](#tempaltes) for more information about available types.
+Source files describing fragments of a knowledge base must have the `<type>.yaml` extension, where `<type>` defines the type of the knowledge base fragment. See [tempaltes](#tempaltes) for more information about available types.
 
 The name of the configuration file is used as a part of the main system identifier of the knowledge base fragment.
 

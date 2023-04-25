@@ -43,7 +43,7 @@ export const getPullRequestData = async (
 
   const fileNames = repository.pullRequest.files.nodes
     .map(node => node.path)
-    .filter(path => new RegExp(`^.+\\.(${configTypes.join('|')})\\.ya?ml$`).test(path))
+    .filter(path => new RegExp(`^.+\\.(${configTypes.join('|')})\\.yaml$`).test(path))
 
   const commitOid = repository.pullRequest.headRef.target.history.nodes.at(0)?.oid
   if (!commitOid) {

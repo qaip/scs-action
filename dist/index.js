@@ -21048,8 +21048,10 @@ const replace = (template, config) => {
         const subtemplate = block.replace(/^\+ /gm, '');
         return typeof replacement === 'function' ? replacement(subtemplate) : replacement;
     };
-    const lineReplacer = (_match, prefix, variable, postfix) => {
+    const lineReplacer = (match, prefix, variable, postfix) => {
         var _a;
+        if (variable === '#END#')
+            return match;
         const replacement = (_a = replacements[variable]) !== null && _a !== void 0 ? _a : variable;
         return typeof replacement === 'function' ? replacement(prefix, postfix) : replacement;
     };
@@ -21060,21 +21062,20 @@ const replace = (template, config) => {
     };
     return template
         .replace(/^\+ \/\* (#\w+#) \*\/\n((\+ [^\n]*\n)+)/gms, blockReplacer)
-        .replace(/^- (.+)(#\w+#)(.+)/gm, lineReplacer)
-        .replace(/(\t*)(#\w+#)/gm, replacer);
+        .replace(/^- (.*)(#\w+#)(.*)\n/gm, lineReplacer)
+        .replace(/(\t*)(#\w+#)/gm, replacer)
+        .replace(/(^\n(\? .*\n)+(- .*\n)?($|\*))|(^\? )/gm, '$4')
+        .replace(/;*\n*- \t*#END#/g, '');
 };
 exports.replace = replace;
-const list = (pre, values, semi = false) => (prefix, postfix = '') => {
-    if (semi) {
-        postfix = postfix.replace(/;$/, '');
-    }
+const list = (values) => (prefix, postfix = '') => {
     return values && values.trim()
-        ? values
+        ? `${values
             .split('\n')
             .filter(Boolean)
-            .map(value => prefix + pre + value + postfix)
-            .join(`${postfix ? '' : ';'}\n`) + (semi ? ';' : '')
-        : `${prefix}...${postfix}`;
+            .map(value => prefix + value + postfix)
+            .join(`${postfix ? '' : ';'}\n`)}\n`
+        : '';
 };
 exports.list = list;
 
@@ -21197,7 +21198,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getReplacements = void 0;
 const generate_1 = __nccwpck_require__(1324);
 const getReplacements = (config) => {
-    var _a;
     const toArray = (value) => (typeof value === 'string' ? value.split(' | ') : value);
     switch (config.configType) {
         case 'domain': {
@@ -21206,12 +21206,11 @@ const getReplacements = (config) => {
                 '#RU#': config.ru,
                 '#EN#': config.en,
                 '#PARENT#': config.parent,
-                '#CHILDREN#': (0, generate_1.list)('subject_domain_of_', config.children),
-                '#SECTION_CHILDREN#': (0, generate_1.list)('section_subject_domain_of_', config.children),
-                '#MAX#': (0, generate_1.list)('concept_', config.max),
-                '#CONCEPTS#': (0, generate_1.list)('concept_', config.concepts),
-                '#RRELS#': (0, generate_1.list)('rrel_', config.rrels),
-                '#NRELS#': (0, generate_1.list)('nrel_', config.nrels),
+                '#CHILDREN#': (0, generate_1.list)(config.children),
+                '#MAX#': (0, generate_1.list)(config.max),
+                '#CONCEPTS#': (0, generate_1.list)(config.concepts),
+                '#NRELS#': (0, generate_1.list)(config.nrels),
+                '#RRELS#': (0, generate_1.list)(config.rrels),
                 '#ATOMIC#': config.children ? 'non_atomic' : 'atomic'
             };
         }
@@ -21222,34 +21221,34 @@ const getReplacements = (config) => {
                 '#SYSTEM#': config.system,
                 '#RU#': toArray(config.ru)[0],
                 '#EN#': toArray(config.en)[0],
-                '#RU_ALT#': (0, generate_1.list)('', toArray(config.ru).slice(1).join('\n')),
-                '#EN_ALT#': (0, generate_1.list)('', toArray(config.en).slice(1).join('\n'), true),
-                '#DEFINITION_RU#': (0, generate_1.list)('', toArray(config.definition.ru).join('\n')),
-                '#DEFINITION_EN#': (0, generate_1.list)('', toArray(config.definition.en).join('\n')),
-                '#DEFINITION_CONCEPTS#': (0, generate_1.list)('concept_', config.definition.using.concepts),
-                '#DEFINITION_NRELS#': (0, generate_1.list)('nrels_', config.definition.using.nrels),
-                '#DEFINITION_RRELS#': (0, generate_1.list)('rrels_', config.definition.using.rrels),
+                '#RU_ALT#': (0, generate_1.list)(toArray(config.ru).slice(1).join('\n')),
+                '#EN_ALT#': (0, generate_1.list)(toArray(config.en).slice(1).join('\n')),
+                '#DEFINITION_RU#': (0, generate_1.list)(toArray(config.definition.ru).join('\n')),
+                '#DEFINITION_EN#': (0, generate_1.list)(toArray(config.definition.en).join('\n')),
+                '#DEFINITION_CONCEPTS#': (0, generate_1.list)(config.definition.using.concepts),
+                '#DEFINITION_NRELS#': (0, generate_1.list)(config.definition.using.nrels),
+                '#DEFINITION_RRELS#': (0, generate_1.list)(config.definition.using.rrels),
                 '#STATEMENT#': template => config.statement
                     ? statements
                         .map(([system, variables]) => (0, generate_1.replace)(template, Object.assign({ configType: 'statement', system }, variables)))
                         .join('\n')
                     : '',
-                '#STATEMENT_CONCEPTS_ALL#': (0, generate_1.list)('concept_', statements.map(statement => statement[1].using.concepts).join('\n')),
-                '#STATEMENT_NRELS_ALL#': (0, generate_1.list)('nrels_', statements.map(statement => statement[1].using.nrels).join('\n')),
-                '#STATEMENT_RRELS_ALL#': (0, generate_1.list)('rrels_', statements.map(statement => statement[1].using.rrels).join('\n'))
+                '#STATEMENT_CONCEPTS_ALL#': (0, generate_1.list)(statements.map(statement => statement[1].using.concepts).join('\n')),
+                '#STATEMENT_NRELS_ALL#': (0, generate_1.list)(statements.map(statement => statement[1].using.nrels).join('\n')),
+                '#STATEMENT_RRELS_ALL#': (0, generate_1.list)(statements.map(statement => statement[1].using.rrels).join('\n'))
             };
-            return config.configType === 'concept' ? Object.assign(Object.assign({}, nbhd), { '#PARENT#': (_a = config.parent) !== null && _a !== void 0 ? _a : '...' }) : Object.assign({}, nbhd);
+            return config.configType === 'concept' ? Object.assign(Object.assign({}, nbhd), { '#PARENT#': (0, generate_1.list)(config.parent) }) : Object.assign({}, nbhd);
         }
         case 'statement':
             return {
                 '#STATEMENT_SYSTEM#': config.system,
-                '#STATEMENT_RU#': (0, generate_1.list)('', toArray(config.ru).join('\n')),
-                '#STATEMENT_EN#': (0, generate_1.list)('', toArray(config.en).join('\n')),
+                '#STATEMENT_RU#': (0, generate_1.list)(toArray(config.ru).join('\n')),
+                '#STATEMENT_EN#': (0, generate_1.list)(toArray(config.en).join('\n')),
                 '#STATEMENT_TITLE_RU#': config.title.ru,
                 '#STATEMENT_TITLE_EN#': config.title.en,
-                '#STATEMENT_CONCEPTS#': (0, generate_1.list)('concept_', config.using.concepts),
-                '#STATEMENT_NRELS#': (0, generate_1.list)('nrels_', config.using.nrels),
-                '#STATEMENT_RRELS#': (0, generate_1.list)('rrels_', config.using.rrels)
+                '#STATEMENT_CONCEPTS#': (0, generate_1.list)(config.using.concepts),
+                '#STATEMENT_NRELS#': (0, generate_1.list)(config.using.nrels),
+                '#STATEMENT_RRELS#': (0, generate_1.list)(config.using.rrels)
             };
     }
 };
@@ -21404,7 +21403,7 @@ const getPullRequestData = (octokit, variables) => __awaiter(void 0, void 0, voi
     const { repository } = yield octokit.graphql(query, variables);
     const fileNames = repository.pullRequest.files.nodes
         .map(node => node.path)
-        .filter(path => new RegExp(`^.+\\.(${types_1.configTypes.join('|')})\\.ya?ml$`).test(path));
+        .filter(path => new RegExp(`^.+\\.(${types_1.configTypes.join('|')})\\.yaml$`).test(path));
     const commitOid = (_a = repository.pullRequest.headRef.target.history.nodes.at(0)) === null || _a === void 0 ? void 0 : _a.oid;
     if (!commitOid) {
         throw new Error('Commit Oid is not found');
@@ -21440,7 +21439,7 @@ const validators_1 = __nccwpck_require__(9783);
 const parse = (text, fileName) => {
     const config = (0, js_yaml_1.load)(text);
     if (isConfigLike(config)) {
-        const [, path, system, configType] = fileName.match(/^(.+\/)?(.+)\.(.+)\.ya?ml$/);
+        const [, path, system, configType] = fileName.match(/^(.+\/)?(.+)\.(.+)\.yaml$/);
         const validate = validators_1.ajv.getSchema(`${configType}.schema.json`);
         if (!validate) {
             throw new Error('Invalid config type');
