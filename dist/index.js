@@ -21148,7 +21148,7 @@ function run() {
             filesContent = filesContent.filter(content => content.trim());
         }
         // Generate scs files
-        const ignoreErrors = core.getInput('ignore_errors');
+        const ignoreInvalid = core.getInput('ignore_invalid');
         const nonNullable = (value) => value !== undefined;
         const files = filesContent
             .map((content, index) => {
@@ -21158,7 +21158,7 @@ function run() {
             catch (e) {
                 if (e instanceof Error) {
                     core.error(e.message);
-                    if (ignoreErrors === 'always') {
+                    if (ignoreInvalid === 'always') {
                         return undefined;
                     }
                     process.exit(1);

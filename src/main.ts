@@ -38,7 +38,7 @@ async function run(): Promise<void> {
   }
 
   // Generate scs files
-  const ignoreErrors = core.getInput('ignore_errors')
+  const ignoreInvalid = core.getInput('ignore_invalid')
   const nonNullable = <T>(value: T): value is NonNullable<T> => value !== undefined
   const files = filesContent
     .map((content, index) => {
@@ -47,7 +47,7 @@ async function run(): Promise<void> {
       } catch (e) {
         if (e instanceof Error) {
           core.error(e.message)
-          if (ignoreErrors === 'always') {
+          if (ignoreInvalid === 'always') {
             return undefined
           }
           process.exit(1)
