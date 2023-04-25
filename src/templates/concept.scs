@@ -3,9 +3,11 @@ concept_#SYSTEM#
 	[#RU#] (* <- lang_ru;; *);
 	[#EN#] (* <- lang_en;; *);
 
-=> nrel_idtf:
+? => nrel_idtf:
 - 	[#RU_ALT#] (* <- lang_ru;; *);
-- 	[#EN_ALT#] (* <- lang_en;; *);;
+- 	[#EN_ALT#] (* <- lang_en;; *);
+
+- 	#END#;;
 
 definition -> definition_of_#SYSTEM# (*
 	-> rrel_key_sc_element: concept_#SYSTEM#;;
@@ -20,9 +22,10 @@ definition -> definition_of_#SYSTEM# (*
 		[Def. (#EN#)] (* <- lang_en;; *);;
 
 	=> nrel_using_constants: {
-		#DEFINITION_CONCEPTS#;
-		#DEFINITION_RRELS#;
-		#DEFINITION_NRELS#
+- 		concept_#DEFINITION_CONCEPTS#;
+- 		rrel_#DEFINITION_RRELS#;
+- 		nrel_#DEFINITION_NRELS#;
+- 		#END#
 	};;
 *);;
 
@@ -40,23 +43,28 @@ definition -> definition_of_#SYSTEM# (*
 + 		[Stat. (#STATEMENT_TITLE_EN#)] (* <- lang_en;; *);;
 + 
 + 	=> nrel_using_constants: {
-+ 		#STATEMENT_CONCEPTS#;
-+ 		#STATEMENT_NRELS#;
-+ 		#STATEMENT_RRELS#
++ - 		concept_#STATEMENT_CONCEPTS#;
++ - 		rrel_#STATEMENT_RRELS#;
++ - 		nrel_#STATEMENT_NRELS#;
++ - 		#END#
 + 	};;
 + *);;
 
-concept_#PARENT# => nrel_inclusion: concept_#SYSTEM#;;
+- concept_#PARENT#
+? => nrel_inclusion: concept_#SYSTEM#;;
 
-sc_node_class ->
-	#PARENT#;
-	#DEFINITION_CONCEPTS#;
-	#STATEMENT_CONCEPTS_ALL#;;
+? sc_node_class ->
+- 	concept_#PARENT#;
+- 	concept_#DEFINITION_CONCEPTS#;
+- 	concept_#STATEMENT_CONCEPTS_ALL#;
+- 	#END#;;
 
-sc_node_norole_relation ->
-	#DEFINITION_NRELS#;
-	#STATEMENT_NRELS_ALL#;;
+? sc_node_norole_relation ->
+- 	nrel_#DEFINITION_NRELS#;
+- 	nrel_#STATEMENT_NRELS_ALL#;
+- 	#END#;;
 
-sc_node_role_relation ->
-	#DEFINITION_RRELS#;
-	#STATEMENT_RRELS_ALL#;;
+? sc_node_role_relation ->
+- 	rrel_#DEFINITION_RRELS#;
+- 	rrel_#STATEMENT_RRELS_ALL#;
+- 	#END#;;
