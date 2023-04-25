@@ -47,7 +47,5 @@ statement:
         code_style_problem
       nrels: |
         solution
-      rrels: |
-        fake_relation
 
 parent: ostis_system_development_automation

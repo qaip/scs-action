@@ -4,7 +4,6 @@ concept_scs_automation
 	[SCs Automation] (* <- lang_en;; *);
 
 => nrel_idtf:
-	[...] (* <- lang_ru;; *);
 	[scs-automation] (* <- lang_en;; *);
 	[scs action] (* <- lang_en;; *);;
 
@@ -25,9 +24,8 @@ definition -> definition_of_scs_automation (*
 		concept_knowledge_base;
 		concept_development_tool;
 		concept_scs_file;
-		...;
-		nrels_automation;
-		nrels_optimization
+		nrel_automation;
+		nrel_optimization
 	};;
 *);;
 
@@ -47,9 +45,7 @@ statement -> statement_of_scs_automation_motivation (*
 		concept_developer;
 		concept_knowledge_base;
 		concept_duplicate;
-		concept_boilerplate_code;
-		...;
-		...
+		concept_boilerplate_code
 	};;
 *);;
 
@@ -67,15 +63,15 @@ statement -> statement_of_scs_automation_and_code_style_problem (*
 
 	=> nrel_using_constants: {
 		concept_code_style_problem;
-		nrels_solution;
-		rrels_fake_relation
+		nrel_solution
 	};;
 *);;
 
-concept_ostis_system_development_automation => nrel_inclusion: concept_scs_automation;;
+concept_ostis_system_development_automation
+=> nrel_inclusion: concept_scs_automation;;
 
 sc_node_class ->
-	ostis_system_development_automation;
+	concept_ostis_system_development_automation;
 	concept_knowledge_base;
 	concept_development_tool;
 	concept_scs_file;
@@ -86,10 +82,6 @@ sc_node_class ->
 	concept_code_style_problem;;
 
 sc_node_norole_relation ->
-	nrels_automation;
-	nrels_optimization;
-	nrels_solution;;
-
-sc_node_role_relation ->
-	...;
-	rrels_fake_relation;;
+	nrel_automation;
+	nrel_optimization;
+	nrel_solution;;

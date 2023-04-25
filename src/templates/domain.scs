@@ -6,16 +6,17 @@ section_subject_domain_of_#SYSTEM#
 	[Раздел. Предметная область #RU#] (* <- lang_ru;; *);
 	[Section. Subject domain of #EN#] (* <- lang_en;; *);
 
-<= nrel_section_decomposition: {
-	#SECTION_CHILDREN#
-};
+? <= nrel_section_decomposition: {
+- 	section_subject_domain_of_#CHILDREN#
+? };
 
 <- rrel_key_sc_element:
 	subject_domain_of_#SYSTEM#;
-	#MAX#;
-	#CONCEPTS#;
-	#RRELS#;
-	#NRELS#;;
+- 	concept_#MAX#;
+- 	concept_#CONCEPTS#;
+- 	nrel_#NRELS#;
+- 	rrel_#RRELS#;
+- 	#END#;;
 
 section_subject_domain_of_#SYSTEM#=[*
 	subject_domain_of_#SYSTEM#
@@ -26,29 +27,33 @@ section_subject_domain_of_#SYSTEM#=[*
 		[Subject Domain of #EN#] (* <- lang_en;; *);
 
 	-> rrel_maximum_studied_object_class:
-		#MAX#;
+- 		concept_#MAX#;
 
-	-> rrel_not_maximum_studied_object_class:
-		#CONCEPTS#;
+? 	-> rrel_not_maximum_studied_object_class:
+- 		concept_#CONCEPTS#;
 
-	-> rrel_explored_relation:
-		#RRELS#;
-		#NRELS#;
+? 	-> rrel_explored_relation:
+- 		nrel_#NRELS#;
+- 		rrel_#RRELS#;
 
 	<= nrel_private_subject_domain:
 		subject_domain_of_#PARENT#;
 
-	=> nrel_private_subject_domain:
-		#CHILDREN#;;
+? 	=> nrel_private_subject_domain:
+- 		subject_domain_of_#CHILDREN#;
+
+- 		#END#;;
 *];;
 
+? sc_node_class ->
+- 	concept_#MAX#;
+- 	concept_#CONCEPTS#;
+- 	#END#;;
 
-sc_node_class ->
-	#MAX#;
-	#CONCEPTS#;;
+? sc_node_norole_relation ->
+- 	nrel_#NRELS#;
+- 	#END#;;
 
-sc_node_role_relation ->
-	#RRELS#;;
-
-sc_node_norole_relation ->
-	#NRELS#;;
+? sc_node_role_relation ->
+- 	rrel_#RRELS#;
+- 	#END#;;
