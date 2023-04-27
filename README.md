@@ -128,6 +128,7 @@ statement:
       rrels: List # optional
   two:
     ...
+subclass: Array<String | List>
 ```
 **Example:** 
 [**Input**](tests/scs_automation.concept.yaml)

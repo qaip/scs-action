@@ -1,5 +1,5 @@
 export type Config = DomainConfig | ConceptConfig | NrelConfig
-export type Subconfig = StatementConfig
+export type Subconfig = StatementConfig | PartitionConfig
 
 interface Identifiers<T = string | string[]> {
   ru: T
@@ -32,7 +32,7 @@ interface NeighbourhoodConfig extends Identifiers {
 
 interface ConceptConfig extends NeighbourhoodConfig {
   configType: 'concept'
-  parent?: string
+  subclass?: string[]
 }
 
 interface NrelConfig extends NeighbourhoodConfig {
@@ -51,6 +51,11 @@ interface StatementConfig extends Identifiers {
   system: string
   title: Identifiers<string>
   using: Nodes
+}
+
+interface PartitionConfig {
+  configType: 'partition'
+  partition: string // multiline
 }
 
 export const configTypes: Config['configType'][] = ['concept', 'domain']

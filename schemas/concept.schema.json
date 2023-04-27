@@ -118,11 +118,25 @@
         }
       ]
     },
-    "parent": {
-      "$ref": "base.schema.json#/$defs/system",
-      "title": "Parent class",
-      "description": "Superclass of the concept, the class the concept is included in",
-      "examples": ["superclass"]
+    "subclass": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "title": "Subclass",
+            "description": "A system identifier interpreted as a subclass of the concept and associated with the inclusion relation",
+            "$ref": "base.schema.json#/$defs/system"
+          },
+          {
+            "title": "Partition",
+            "description": "A list of system identifiers interpreted as a partition of the concept and associated with the 'partition of a set' relation (also known as subdividing relation)",
+            "$ref": "base.schema.json#/$defs/system-2"
+          }
+        ]
+      },
+      "title": "Subclasses",
+      "description": "Array of the concept subclasses, the classes the concept can be divided into. Array element can be either a single system identifier or a list of system identifiers. A single system identifier is interpreted as a subclass associated with the inclusion relation, and a list of system identifiers is interpreted as a partition of the concept and is associated with the subdividing relation",
+      "examples": [["subclass", "|\n    first_partition\n    second_partition\n    third_partition"]]
     }
   },
   "required": ["ru", "en", "definition"],

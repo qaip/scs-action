@@ -43,7 +43,21 @@ export const getReplacements = (config: Config | Subconfig): Replacements => {
         '#STATEMENT_NRELS_ALL#': list(statements.map(statement => statement[1].using.nrels).join('\n')),
         '#STATEMENT_RRELS_ALL#': list(statements.map(statement => statement[1].using.rrels).join('\n'))
       }
-      return config.configType === 'concept' ? { ...nbhd, '#PARENT#': list(config.parent) } : { ...nbhd }
+      return config.configType === 'concept'
+        ? {
+            ...nbhd,
+            '#PARTITIONS#': template =>
+              config.subclass
+                ? config.subclass
+                    .filter(partition => partition.includes('\n'))
+                    .map(partition => replace(template, { configType: 'partition', partition }))
+                    .join('\n')
+                : '',
+            '#SUBSETS#': config.subclass
+              ? list(config.subclass.filter(partition => !partition.includes('\n')).join('\n'))
+              : ''
+          }
+        : { ...nbhd }
     }
     case 'statement':
       return {
@@ -55,6 +69,10 @@ export const getReplacements = (config: Config | Subconfig): Replacements => {
         '#STATEMENT_CONCEPTS#': list(config.using.concepts),
         '#STATEMENT_NRELS#': list(config.using.nrels),
         '#STATEMENT_RRELS#': list(config.using.rrels)
+      }
+    case 'partition':
+      return {
+        '#PARTITION#': list(config.partition)
       }
   }
 }
