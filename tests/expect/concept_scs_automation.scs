@@ -5,7 +5,21 @@ concept_scs_automation
 
 => nrel_idtf:
 	[scs-automation] (* <- lang_en;; *);
-	[scs action] (* <- lang_en;; *);;
+	[scs action] (* <- lang_en;; *);
+
+=> nrel_subdividing: {
+	concept_subclass_b;
+	concept_subclass_c;
+	concept_subclass_d
+};
+
+=> nrel_subdividing: {
+	concept_subclass_d;
+	concept_subclass_e
+};
+
+=> nrel_inclusion:
+subclass_a;;
 
 definition -> definition_of_scs_automation (*
 	-> rrel_key_sc_element: concept_scs_automation;;
@@ -67,11 +81,7 @@ statement -> statement_of_scs_automation_and_code_style_problem (*
 	};;
 *);;
 
-concept_ostis_system_development_automation
-=> nrel_inclusion: concept_scs_automation;;
-
 sc_node_class ->
-	concept_ostis_system_development_automation;
 	concept_knowledge_base;
 	concept_development_tool;
 	concept_scs_file;

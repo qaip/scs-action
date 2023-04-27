@@ -48,4 +48,12 @@ statement:
       nrels: |
         solution
 
-parent: ostis_system_development_automation
+subclass:
+  - subclass_a
+  - |
+    subclass_b
+    subclass_c
+    subclass_d
+  - |
+    subclass_d
+    subclass_e
