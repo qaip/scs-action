@@ -7,6 +7,15 @@ concept_#SYSTEM#
 - 	[#RU_ALT#] (* <- lang_ru;; *);
 - 	[#EN_ALT#] (* <- lang_en;; *);
 
++ /* #PARTITIONS# */
++ => nrel_subdividing: {
++ - 	concept_#PARTITION#;
++ - 	#END#
++ };
+
+? => nrel_inclusion:
+- #SUBSETS#;
+
 - 	#END#;;
 
 definition -> definition_of_#SYSTEM# (*
@@ -50,11 +59,7 @@ definition -> definition_of_#SYSTEM# (*
 + 	};;
 + *);;
 
-- concept_#PARENT#
-? => nrel_inclusion: concept_#SYSTEM#;;
-
 ? sc_node_class ->
-- 	concept_#PARENT#;
 - 	concept_#DEFINITION_CONCEPTS#;
 - 	concept_#STATEMENT_CONCEPTS_ALL#;
 - 	#END#;;
