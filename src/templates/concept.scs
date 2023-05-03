@@ -14,7 +14,7 @@ concept_#SYSTEM#
 + };
 
 ? => nrel_inclusion:
-- #SUBSETS#;
+- concept_#SUBSETS#;
 
 - 	#END#;;
 
