@@ -19,7 +19,7 @@ concept_scs_automation
 };
 
 => nrel_inclusion:
-subclass_a;;
+concept_subclass_a;;
 
 definition -> definition_of_scs_automation (*
 	-> rrel_key_sc_element: concept_scs_automation;;
