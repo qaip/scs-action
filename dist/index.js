@@ -21457,7 +21457,10 @@ const parse = (text, fileName) => {
             throw new Error('Invalid config type');
         }
         if (!validate(config)) {
-            throw new Error(validators_1.ajv.errorsText(validate.errors, { dataVar: configType, separator: '\n' }));
+            throw new Error(`[${system}.${configType}.yaml]\n${validators_1.ajv.errorsText(validate.errors, {
+                dataVar: configType,
+                separator: '\n'
+            })}`);
         }
         config.system = system;
         config.configType = configType;
