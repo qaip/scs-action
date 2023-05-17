@@ -12,7 +12,12 @@ export const parse = (text: string, fileName: string): [config: Config, path: st
       throw new Error('Invalid config type')
     }
     if (!validate(config)) {
-      throw new Error(ajv.errorsText(validate.errors, { dataVar: configType, separator: '\n' }))
+      throw new Error(
+        `[${system}.${configType}.yaml]\n${ajv.errorsText(validate.errors, {
+          dataVar: configType,
+          separator: '\n'
+        })}`
+      )
     }
     config.system = system
     config.configType = configType
