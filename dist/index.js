@@ -21392,7 +21392,7 @@ const getPullRequestData = (octokit, variables) => __awaiter(void 0, void 0, voi
     query ($owner: String!, $repo: String!, $pullRequestNumber: Int!) {
       repository(owner: $owner, name: $repo) {
         pullRequest(number: $pullRequestNumber) {
-          files(first: 10000) {
+          files(first: 100) {
             nodes {
               path
             }
